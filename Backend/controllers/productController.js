@@ -134,7 +134,6 @@ const deleteProductById = asyncHandler(async (req, res) => {
             message: "Product successfully deleted.",
         });
     } catch (error) {
-        console.error("Error in deleteProducts:", error.message);
         return res.status(500).json({
             success: false,
             message: "Server Error.",
@@ -242,9 +241,7 @@ const fetchAllProducts = asyncHandler(async (req, res) => {
         success: true,
         data: products,
       });
-    } catch (error) {
-      console.error(error);
-  
+    } catch (error) {  
       // Return error response
       res.status(500).json({
         success: false,
@@ -320,7 +317,6 @@ const fetchAllProducts = asyncHandler(async (req, res) => {
             message: "Review added successfully to product.",
         });
     } catch (error) {
-        console.error(error);
         return res.status(500).json({
             success: false,
             message: "Server error. Could not add review.",
@@ -346,8 +342,6 @@ const fetchTopProducts = asyncHandler(async (req, res) => {
             data: products,
         });
     } catch (error) {
-        console.error(error);
-
         // Return error response
         return res.status(500).json({
             success: false,
