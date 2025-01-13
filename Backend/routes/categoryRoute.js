@@ -5,7 +5,7 @@ import {
     getCategoryById,
     getCategoryByName,
     deleteCategory
-} from "../controllers/CategoryController.js"
+} from "../controllers/categoryController.js"
 //middleware functions
 import { authenticate, authorizedAdmin } from '../middlewares/authMiddleware.js'
 //make a new router

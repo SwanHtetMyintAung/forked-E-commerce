@@ -9,10 +9,10 @@ const createCategory = asyncHandler(async (req,res)=>{
     if(!categoryName){
         return res.status(400).json({
             success:false,
-            message:"The name is not valid!"
+            message:"The name field is required!"
         })
     }
-    // Validation : check if the password is longer than 32
+    // Validation : check if the categoryName is longer than 32
     if (!validator.isLength(categoryName, { max: 32 })) {
         return res.status(400).json({
             success: false,
