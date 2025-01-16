@@ -1,21 +1,22 @@
 //Packages 
-import express from 'express'
-import cookieParser from 'cookie-parser'
-import dotenv from 'dotenv'
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
 
 
 //userRoute
-import userRoutes from './routes/userRoute.js'
+import userRoutes from './routes/userRoute.js';
 //categort Route
-import categoryRoutes from './routes/categoryRoute.js'
+import categoryRoutes from './routes/categoryRoute.js';
 //product Route
-import productRoutes from './routes/productRoute.js'
+import productRoutes from './routes/productRoute.js';
 //file upload Route
-import uploadRoute from './routes/uploadRoute.js'
+import uploadRoute from './routes/uploadRoute.js';
+//order Rotues
+import orderRoutes from './routes/orderRoute.js';
 
 //Functions in local seperated files
 import connectDB from './config/db.js';
-
 
 
 //config
@@ -39,6 +40,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/uploads', uploadRoute)
+app.use('/api/orders', orderRoutes);
 
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
