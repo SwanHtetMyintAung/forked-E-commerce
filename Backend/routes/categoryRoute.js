@@ -12,13 +12,14 @@ import { authenticate, authorizedAdmin } from '../middlewares/authMiddleware.js'
 const router = express.Router();
 
 //you need to be an admin to create and get access to categories
-router.post('/new', authenticate, authorizedAdmin, createCategory);
+router.post('/new',authenticate, authorizedAdmin,  createCategory);
 //get every category
 router.get("/all", getAllCategory);
-//get a single category with an ID
+//with category name
 router.route("/name/:categoryName")
-        .get(authenticate, authorizedAdmin, getCategoryByName)
-        .delete(authenticate, authorizedAdmin, deleteCategory);
+    .get(authenticate, authorizedAdmin, getCategoryByName)
+    .delete(authenticate, authorizedAdmin, deleteCategory);
+//get a single category with an ID
 router.get("/:id",authenticate, authorizedAdmin, getCategoryById);
 //get category with a Name (if the database have more than one cateogories with same name , it will return all of the model with same name)
 

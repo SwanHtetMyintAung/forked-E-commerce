@@ -76,9 +76,9 @@ const getCategoryById = asyncHandler(async (req,res)=>{
 const getCategoryByName = asyncHandler(async (req,res)=>{
     //you can change here depends on where the category id will be coming from
     const {categoryName} = req.params;//req.body.name
-    const category = await Category.find({ name : categoryName})
+    const category = await Category.find( { "name" : { $regex : new RegExp(categoryName, "i") } } );
     //in case it isn't found
-    if(!category){
+    if(!category || !category.length){
         return res.status(404).json({
             success:false,
             message:"Category Not Found!"
@@ -92,7 +92,7 @@ const getCategoryByName = asyncHandler(async (req,res)=>{
 const deleteCategory = asyncHandler(async (req,res)=>{
     //we can also use the category id here but i think name might be more convienient
     const {categoryName} = req.params;
-    const category = await Category.findOne({ name : categoryName})
+    const category = await Category.find( { "name" : { $regex : new RegExp(categoryName, "i") } } );
     //in case nothing was found
     if(!category){
         return res.status(404).json({
@@ -100,7 +100,7 @@ const deleteCategory = asyncHandler(async (req,res)=>{
             message:"Category Not Found!"
         })
     }
-    await category.deleteOne();
+    await category[0].deleteOne();
 
     return res.status(200).json({
         success:true,

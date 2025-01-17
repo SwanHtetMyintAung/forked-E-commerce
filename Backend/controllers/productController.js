@@ -1,12 +1,26 @@
 import Product from "../models/productModel.js";
 import asyncHandler from '../middlewares/asyncHandler.js'
 import mongoose from "mongoose";
+import Category from '../models/categoryModel.js'
 
 //create product 
 const createProduct = asyncHandler(async (req, res) => {
     //Extract the datas from req.fields
-    const { name, image, brand, quantity, category, description, price } = req.fields;
-
+    let { name, image, brand, quantity, category, description, price } = req.body;
+    //get the ID of the category from DB
+    let categoryFromDB = await Category.findOne({name:category});
+    //create a new category if none is found
+    if(!categoryFromDB){
+        const newCategory = new Category({
+            name : category
+        })
+        await newCategory.save();
+        categoryFromDB = newCategory;
+        //assign it so it can be used outside
+    }
+    //assign the id from the db
+    category = categoryFromDB._id;//reason for doing this is to be able to just type the name instead of copying the actual ID
+    //you can comment the block for just id from user
     // Validation for product creation
     switch (true) {
         case !name || !name.trim():

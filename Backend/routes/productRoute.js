@@ -38,7 +38,7 @@ router.post('/addReview/:id', authenticate, addProductReview);
 
 //Authenticate & Authorized Admin Routes
 //create the product
-router.post('/create', authenticate, authorizedAdmin, formidable(), createProduct);
+router.post('/create', authenticate, authorizedAdmin, createProduct);
 //update the product
 router.put('/update/:id', authenticate, authorizedAdmin, formidable(), updateProduct);
 //deltete the product
