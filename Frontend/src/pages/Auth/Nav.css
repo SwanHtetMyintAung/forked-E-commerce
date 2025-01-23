@@ -1,0 +1,29 @@
+.nav-bar{
+    background-color: rgba(38, 181, 31, 0.186);
+}
+
+.nav-tab{
+    color: aliceblue;
+}
+
+.nav-tab:hover {
+    color: green;
+    transition: all 0.3s ease; /* Smooth hover effect */
+}
+
+.active-tab {
+   color: black;
+  }
+
+
+.nav-dropdown{
+    background-color: #1bde5545;
+    color: aliceblue;
+    margin: 0px 10px 0px 10px;
+}
+
+.nav-dropdown-item:hover{
+    background-color:aquamarine; /* Change dropdown background color */
+  border: 1px solid #ddd; /* Optional: Add a border for a cleaner look */
+}
+

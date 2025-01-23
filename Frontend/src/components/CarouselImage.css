@@ -1,0 +1,75 @@
+/* Animations for carousel items */
+
+/* Fade In Animation */
+
+/* .carousel-content{
+    margin-bottom: 100px;
+} */
+
+.animate-fade-in {
+    animation: fadeIn 2s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Slide Up Animation */
+  .animate-slide-up {
+    animation: slideUp 1s ease-in-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Slide Left Animation */
+  .animate-slide-left {
+    animation: slideLeft 1.5s ease-in-out;
+  }
+  
+  @keyframes slideLeft {
+    from {
+      transform: translateX(-50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Slide Right Animation */
+  .animate-slide-right {
+    animation: slideRight 1.5s ease-in-out;
+  }
+  
+  @keyframes slideRight {
+    from {
+      transform: translateX(50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  
+  
+  p{
+    color: rgba(243, 243, 249, 0.838);
+  }
+  

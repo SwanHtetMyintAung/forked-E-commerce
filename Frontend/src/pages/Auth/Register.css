@@ -1,0 +1,23 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  h2 {
+    color: #007bff;
+  }
+  
+  button {
+    transition: all 0.3s ease;
+  }
+  
+  button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 10px rgba(0, 123, 255, 0.2);
+  }
+
+
+  .form-label{
+    color: #f8f9fa;
+  }
+  
