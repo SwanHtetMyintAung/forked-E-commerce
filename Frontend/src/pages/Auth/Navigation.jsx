@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Container, Navbar, Nav, NavDropdown, Form, Button } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import {  useSelector } from 'react-redux';
-import './Nav.css';
+import '../../../public/css/Nav.css';
 import Model from '../../components/Model.jsx';
 
 function Navigation() {

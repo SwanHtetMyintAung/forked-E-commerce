@@ -7,7 +7,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useLoginMutation } from "../../redux/api/userApiSlice";
 import { setCredentials } from "../../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
-import "./Register.css";
+import "../../../public/css/Register.css";
 
 const Register = () => {
   const [validated, setValidated] = useState(false);

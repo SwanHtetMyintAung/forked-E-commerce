@@ -3,7 +3,7 @@ import Carousel from "react-bootstrap/Carousel";
 import carosel1 from "../../public/images/lucrezia-carnelos-wQ9VuP_Njr4-unsplash.jpg";
 import carosel2 from "../../public/images/markus-spiske-wL7pwimB78Q-unsplash.jpg";
 import carosel3 from "../../public/images/visuals-IVqug9_5fNs-unsplash.jpg";
-import "./CarouselImage.css";
+import "../../public/css/CarouselImage.css";
 
 function CarouselImage() {
   const [currentSlide, setCurrentSlide] = useState(0);

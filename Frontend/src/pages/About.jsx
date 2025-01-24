@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import "./About.css"; // CSS for responsiveness and styling
+import "../../public/css/About.css"; // CSS for responsiveness and styling
 
 function About() {
   return (
