@@ -2,7 +2,29 @@ import Product from "../models/productModel.js";
 import asyncHandler from '../middlewares/asyncHandler.js'
 import mongoose from "mongoose";
 import Category from '../models/categoryModel.js'
+import * as fs from 'fs';
+import * as path from 'path'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
+const __filename = fileURLToPath(import.meta.url);//get the url of this file
+const __dirname = dirname(dirname(dirname(__filename)));//get to the root folder of the project
+console.log(__dirname)
+//get the image from uploads
+async function getImageData(imagePath) {
+    try {
+      // Read the image file (replace with your file reading logic)
+      const imageBuffer = await fs.readFileSync(imagePath); 
+  
+      // Convert image to base64 (optional, depending on your frontend requirements)
+      const base64Image = Buffer.from(imageBuffer).toString('base64'); 
+  
+      return base64Image; 
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      return null; 
+    }
+  }
 //create product 
 const createProduct = asyncHandler(async (req, res) => {
     //Extract the datas from req.fields
@@ -146,7 +168,7 @@ const deleteProductById = asyncHandler(async (req, res) => {
 
 //fetch products
 const fetchProducts = asyncHandler(async (req, res) => {
-    const pageSize = 6; // Number of products per page
+    const pageSize = Number(req.query.pageSize) || 6; // Number of products per page
     const page = Number(req.query.page) || 1; // Get page number from query, default to 1
 
     // Check if a keyword is provided for filtering
@@ -168,19 +190,24 @@ const fetchProducts = asyncHandler(async (req, res) => {
             .skip(pageSize * (page - 1)) // Skip products for previous pages
             .limit(pageSize); // Limit results to page size
 
-        // Calculate if there are more pages
-        const hasMore = page < Math.ceil(count / pageSize);
-
-        return res.status(200).json({
-            success: true,
-            data: {
-                products,
+            // Calculate if there are more pages
+            const hasMore = page < Math.ceil(count / pageSize);
+            const productsWithImages = products.map(product => ({
+                ...product.toObject(),
+                image:fs.readFileSync(__dirname+product.image).toString("base64"),
+            }));
+            const fullResponse = {
+                productsWithImages,
                 page,
                 pages: Math.ceil(count / pageSize),
                 hasMore,
-            },
+            }
+        return res.status(200).json({
+            success: true,
+            data:fullResponse
         });
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             success: false,
             message: "Server error. Could not fetch products.",
@@ -229,27 +256,43 @@ const fetchProductById = asyncHandler(async (req, res) => {
 
 //fetch all products
 const fetchAllProducts = asyncHandler(async (req, res) => {
+    const pageSize = req.query.limit || 12
+    const page = req.query.page || 1
     try {
       // Fetch products with category populated, sorted by creation date, and limited to 12 items
+      const count = await Product.countDocuments({});
       const products = await Product.find({})
         .populate("category")
-        .limit(12)
+        .limit(pageSize)
+        .skip(pageSize * (page-1))
         .sort({ createdAt: -1 }); // Ensure the field name matches your schema
-  
       // Return success response
-      res.status(200).json({
+      const hasMore = page < Math.ceil(count / pageSize);
+      console.log(hasMore)
+      // Modify image URLs to point to the image-serving API
+      const productsWithImages = products.map(product => ({
+        ...product.toObject(),
+        image:fs.readFileSync(__dirname+product.image).toString("base64"),
+     }));
+    const fullResponse = {
+        productsWithImages,
+        page,
+        pages: Math.ceil(count / pageSize),
+        hasMore,
+    }
+    res.status(200).json({
         success: true,
-        data: products,
-      });
+        data:fullResponse,    
+    });
     } catch (error) {  
-      // Return error response
-      res.status(500).json({
+        // Return error response
+        res.status(500).json({
         success: false,
         message: "Server Error. Could not fetch products.",
         error: error.message, // Include error message for debugging
-      });
+    });
     }
-  });
+});
 
 
   //Add product reviews
@@ -352,40 +395,71 @@ const fetchTopProducts = asyncHandler(async (req, res) => {
 });
 
 //filter products
-const filterProducts = asyncHandler(async (req, res) => {
+// const filterProducts = asyncHandler(async (req, res) => {
+//     try {
+//       const { checked = [], radio = [] } = req.body;
+  
+//       // Initialize query arguments
+//       let args = {};
+  
+//       // Validate and add category filter
+//       if (Array.isArray(checked) && checked.length > 0) {
+//         const validCategories = checked.filter((id) =>
+//           mongoose.Types.ObjectId.isValid(id)
+//         );
+//         if (validCategories.length > 0) {
+//           args.category = { $in: validCategories }; // Use $in for matching multiple categories
+//         }
+//       }
+  
+//       // Validate and add price range filter
+//       if (Array.isArray(radio) && radio.length === 2) {
+//         const [min, max] = radio;
+//         if (!isNaN(min) && !isNaN(max)) {
+//           args.price = { $gte: min, $lte: max };
+//         }
+//       }
+  
+//       // Fetch products based on filters
+//       const products = await Product.find(args);
+//       return res.status(200).json({ success: true, data: products });
+//     } catch (error) {
+//       console.error("Error in filterProducts:", error.message);
+//       return res.status(500).json({ success: false, error: "Server Error" });
+//     }
+//   });
+// Filter products based on category and search term
+const filterProducts = async (req, res) => {
     try {
-      const { checked = [], radio = [] } = req.body;
+      const { category, searchTerm } = req.query; // Extract query parameters
   
-      // Initialize query arguments
-      let args = {};
-  
-      // Validate and add category filter
-      if (Array.isArray(checked) && checked.length > 0) {
-        const validCategories = checked.filter((id) =>
-          mongoose.Types.ObjectId.isValid(id)
-        );
-        if (validCategories.length > 0) {
-          args.category = { $in: validCategories }; // Use $in for matching multiple categories
+      // Build the query object based on parameters
+      let filter = {};
+      if (category && category !== 'all') {
+        const categoryFromDb = await Category.find( { "name" : { $regex : new RegExp(category, "i") } } );
+        // Check if category is found, then assign the first match's _id to filter
+        if (categoryFromDb.length > 0) {
+            filter.category = categoryFromDb[0]._id;
+        } else {
+            // No category found, send a response indicating no results found
+            return res.status(404).json({ success: false, message: "Category not found" });
         }
       }
   
-      // Validate and add price range filter
-      if (Array.isArray(radio) && radio.length === 2) {
-        const [min, max] = radio;
-        if (!isNaN(min) && !isNaN(max)) {
-          args.price = { $gte: min, $lte: max };
-        }
+      if (searchTerm) {
+        filter.name = { $regex: searchTerm, $options: 'i' }; // Search by name (case-insensitive)
       }
   
-      // Fetch products based on filters
-      const products = await Product.find(args);
+      // Fetch filtered products from the database
+      const products = await Product.find({category:filter.category.toString()});
+      console.log(products, filter.category.toString())
+      // Send back the filtered products
       return res.status(200).json({ success: true, data: products });
     } catch (error) {
-      console.error("Error in filterProducts:", error.message);
+      console.error('Error filtering products:', error);
       return res.status(500).json({ success: false, error: "Server Error" });
     }
-  });
-  
+  };
 
 
 export {

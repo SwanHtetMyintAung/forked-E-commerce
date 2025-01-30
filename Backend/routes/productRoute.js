@@ -28,7 +28,7 @@ router.get('/allProducts', fetchAllProducts);
 //fetch product by rating
 router.get('/topProduct', fetchTopProducts);
 //fliter products
-router.post('/filter', filterProducts);
+router.get('/filter', filterProducts);
 
 
 
@@ -38,7 +38,7 @@ router.post('/addReview/:id', authenticate, addProductReview);
 
 //Authenticate & Authorized Admin Routes
 //create the product
-router.post('/create', authenticate, authorizedAdmin, createProduct);
+router.post('/create', createProduct);
 //update the product
 router.put('/update/:id', authenticate, authorizedAdmin, formidable(), updateProduct);
 //deltete the product

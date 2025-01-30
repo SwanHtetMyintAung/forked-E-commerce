@@ -5,6 +5,7 @@
         "brand": "Apple",
         "category": "Smartphone",
         "description": "Latest iPhone with cutting-edge features and performance.",
+        "quantity":10,
         "price": "1,099$"
     },
     {
@@ -13,6 +14,7 @@
         "brand": "Samsung",
         "category": "Smartphone",
         "description": "Best Android phone with a stunning camera and display.",
+        "quantity":10,
         "price": "1,199$"
     },
     {
@@ -21,6 +23,7 @@
         "brand": "Apple",
         "category": "Laptop",
         "description": "Powerful laptop for professionals with M1 Pro chip.",
+        "quantity":10,
         "price": "2,499$"
     },
     {
@@ -29,6 +32,7 @@
         "brand": "Dell",
         "category": "Laptop",
         "description": "Sleek, lightweight, and powerful ultrabook.",
+        "quantity":10,
         "price": "1,299$"
     },
     {
@@ -37,6 +41,7 @@
         "brand": "Apple",
         "category": "Tablet",
         "description": "Professional tablet with excellent display and power.",
+        "quantity":10,
         "price": "1,099$"
     },
     {
@@ -45,6 +50,7 @@
         "brand": "Samsung",
         "category": "Tablet",
         "description": "Large tablet with premium performance and S Pen support.",
+        "quantity":10,
         "price": "1,100$"
     },
     {
@@ -53,6 +59,7 @@
         "brand": "Apple",
         "category": "Smartwatch",
         "description": "Premium smartwatch designed for extreme sports and outdoor use.",
+        "quantity":10,
         "price": "799$"
     },
     {
@@ -61,6 +68,7 @@
         "brand": "Samsung",
         "category": "Smartwatch",
         "description": "Stylish smartwatch with health tracking and fitness features.",
+        "quantity":10,
         "price": "399$"
     },
     {
@@ -69,6 +77,7 @@
         "brand": "Sony",
         "category": "Headphones",
         "description": "Premium noise-canceling headphones with excellent sound quality.",
+        "quantity":10,
         "price": "349$"
     },
     {
@@ -77,6 +86,7 @@
         "brand": "Bose",
         "category": "Headphones",
         "description": "Comfortable and effective noise-canceling headphones.",
+        "quantity":10,
         "price": "329$"
     },
     {
@@ -85,6 +95,7 @@
         "brand": "JBL",
         "category": "Speakers",
         "description": "Powerful wireless speaker with deep bass and long battery life.",
+        "quantity":10,
         "price": "179$"
     },
     {
@@ -93,6 +104,7 @@
         "brand": "Ultimate Ears",
         "category": "Speakers",
         "description": "Durable and waterproof portable speaker with 360-degree sound.",
+        "quantity":10,
         "price": "199$"
     },
     {
@@ -101,6 +113,7 @@
         "brand": "Philips",
         "category": "Health & Personal Care",
         "description": "Electric toothbrush for superior oral care.",
+        "quantity":10,
         "price": "229$"
     },
     {
@@ -109,6 +122,7 @@
         "brand": "Oral-B",
         "category": "Health & Personal Care",
         "description": "Smart electric toothbrush with AI-driven insights for brushing.",
+        "quantity":10,
         "price": "299$"
     },
     {
@@ -117,6 +131,7 @@
         "brand": "LG",
         "category": "TV",
         "description": "Stunning OLED display for the ultimate TV viewing experience.",
+        "quantity":10,
         "price": "1,299$"
     },
     {
@@ -125,6 +140,7 @@
         "brand": "Samsung",
         "category": "TV",
         "description": "Brilliant 4K QLED with incredible brightness and contrast.",
+        "quantity":10,
         "price": "1,799$"
     },
     {
@@ -133,6 +149,7 @@
         "brand": "Ring",
         "category": "Home Security",
         "description": "Smart video doorbell with enhanced video quality and motion detection.",
+        "quantity":10,
         "price": "199$"
     },
     {
@@ -141,6 +158,7 @@
         "brand": "Google Nest",
         "category": "Home Security",
         "description": "High-definition outdoor security camera with facial recognition.",
+        "quantity":10,
         "price": "349$"
     },
     {
@@ -149,6 +167,7 @@
         "brand": "Sony",
         "category": "Gaming Console",
         "description": "Next-gen gaming console with incredible graphics and speed.",
+        "quantity":10,
         "price": "499$"
     },
     {
@@ -157,6 +176,7 @@
         "brand": "Microsoft",
         "category": "Gaming Console",
         "description": "Powerful gaming console with 4K resolution and fast load times.",
+        "quantity":10,
         "price": "499$"
     },
     {
@@ -165,6 +185,7 @@
         "brand": "Amazon",
         "category": "E-Reader",
         "description": "E-reader with a high-resolution display and adjustable warm light.",
+        "quantity":10,
         "price": "249$"
     },
     {
@@ -173,6 +194,7 @@
         "brand": "Barnes & Noble",
         "category": "E-Reader",
         "description": "Compact e-reader with a sharp, easy-on-the-eyes display.",
+        "quantity":10,
         "price": "179$"
     },
     {
@@ -181,6 +203,7 @@
         "brand": "GoPro",
         "category": "Camera",
         "description": "Action camera with 5.3K video and advanced stabilization.",
+        "quantity":10,
         "price": "499$"
     },
     {
@@ -189,6 +212,7 @@
         "brand": "Sony",
         "category": "Camera",
         "description": "Full-frame mirrorless camera with exceptional photo and video quality.",
+        "quantity":10,
         "price": "2,498$"
     },
     {
@@ -197,6 +221,7 @@
         "brand": "DJI",
         "category": "Drone",
         "description": "Compact drone with 5.4K camera and advanced flight features.",
+        "quantity":10,
         "price": "999$"
     },
     {
@@ -205,6 +230,7 @@
         "brand": "Autel Robotics",
         "category": "Drone",
         "description": "High-performance drone with 50MP camera and 4K video.",
+        "quantity":10,
         "price": "1,149$"
     }
 ]

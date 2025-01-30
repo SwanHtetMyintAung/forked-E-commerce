@@ -140,7 +140,7 @@ const Register = () => {
                     value={formData.password}
                     onChange={handleInputChange}
                     required
-                    minLength="6"
+                    minLength="8"
                   />
                   <InputGroup.Text
                     onClick={togglePasswordVisibility}

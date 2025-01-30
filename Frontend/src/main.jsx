@@ -10,7 +10,7 @@ import Register from './pages/Auth/Register.jsx';
 import Login from './pages/Auth/Login.jsx';
 import Home from './pages/Home.jsx';
 import About from './pages/About.jsx';
-
+import Products from './pages/Products.jsx';
 
 //This is routes for frontend ui 
 const router = createBrowserRouter(
@@ -22,6 +22,7 @@ const router = createBrowserRouter(
        <Route path='/login' element={<Login/>}/>
        <Route index={true} path='/' element={<Home/>}/>
        <Route path='/about' element={<About/>}/>
+       <Route path="/products" element={<Products/>}/>
     </Route>
 
   )
