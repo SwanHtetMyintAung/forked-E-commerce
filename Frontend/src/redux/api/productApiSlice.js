@@ -13,7 +13,6 @@ export const productApiSlice = apiSlice.injectEndpoints({
     // Fetch products (for listing, may use pagination)
     fetchProducts: builder.query({
       query: ({ page, pageSize = 10 }) => {
-        console.log(page,pageSize)
         return`${PRODUCT_URL}/allProducts?page=${page}&limit=${pageSize}`
       },  
       transformResponse: (response) => {
