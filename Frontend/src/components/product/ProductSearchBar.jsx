@@ -1,51 +1,43 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Form, Button, InputGroup } from "react-bootstrap";
-import { useFilterProductsQuery } from '../redux/api/productApiSlice';
 
 const ProductSearchBar = () => {
+  const navigate = useNavigate();
   const [category, setCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [submittedFilterParams, setSubmittedFilterParams] = useState(null);
-
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Set the submitted filter parameters which will trigger the API call
-    setSubmittedFilterParams({
-      category: category !== "all" ? category : "",  // Only send category if it's not 'all'
-      searchTerm: searchTerm,
-    });
+    const params = { category, searchTerm, page:1 }; // Ensure correct values
+    navigate(`/products/filter?${new URLSearchParams(params).toString()}`);
   };
 
-  // Use the hook to fetch filtered products only when the form is submitted
-  const { data, error, isLoading } = useFilterProductsQuery(submittedFilterParams, {
-    skip: !submittedFilterParams, // Skip the query until params are set
-  });
+  //need to change this bit with an actual api call
+    const [categoryData, setCategoryData] = useState([]);
+    const [categoryIsLoading, setCategoryIsLoading] = useState(true); // Track loading state
+    const [categoryError, setCategoryError] = useState(null); // Store any errors
 
-      const [categoryData, setCategoryData] = useState([]);
-      const [categoryIsLoading, setCategoryIsLoading] = useState(true); // Track loading state
-      const [categoryError, setCategoryError] = useState(null); // Store any errors
-  
-      useEffect(() => {
-          const fetchData = async () => {
-          try {
-              const response = await fetch('/data/data.json');
-              if (!response.ok) {
-                  throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              const jsonData = await response.json();
-              const categories = [...new Set(jsonData.map(item => item.category))];
-              setCategoryData(categories)
-          } catch (err) {
-              setCategoryError(err.message);
-              console.error('Error fetching data:', err);
-          } finally {
-            setCategoryIsLoading(false); // Set loading to false regardless of success or failure
-          }
-          };
-  
-          fetchData();
-      }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+        try {
+            const response = await fetch('/data/data.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const jsonData = await response.json();
+            const categories = [...new Set(jsonData.map(item => item.category))];
+            setCategoryData(categories)
+        } catch (err) {
+            setCategoryError(err.message);
+            console.error('Error fetching data:', err);
+        } finally {
+          setCategoryIsLoading(false); // Set loading to false regardless of success or failure
+        }
+        };
+
+        fetchData();
+    }, []);
   return (
     <Form onSubmit={handleSubmit} style={{ maxWidth: "500px" }} className="d-flex mx-auto justify-content-center align-items-center">
       {/* Input Group for Select + Text + Button */}
@@ -86,7 +78,7 @@ const ProductSearchBar = () => {
         </Button>
       </InputGroup>
 
-      {/* Loading / Error / Data Display */}
+      {/* Loading / Error / Data Display
       {isLoading && <div>Loading products...</div>}
       {error && <div style={{ color: 'red' }}>Error: {error.message}</div>}
       {data && data.length > 0 && (
@@ -99,7 +91,7 @@ const ProductSearchBar = () => {
           </ul>
         </div>
       )}
-      {data && data.length === 0 && <div>No products found</div>}
+      {data && data.length === 0 && <div>No products found</div>} */}
     </Form>
   );
 };

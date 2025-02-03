@@ -1,6 +1,6 @@
 import { apiSlice } from "./apiSlice";
 import { PRODUCT_URL } from "../constants";
-
+const PAGE_SIZE = 6;
 
 
 // Create productApiSlice by injecting endpoints into the base slice
@@ -12,7 +12,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
     }),
     // Fetch products (for listing, may use pagination)
     fetchProducts: builder.query({
-      query: ({ page, pageSize = 10 }) => {
+      query: ({ page, pageSize = PAGE_SIZE }) => {
         return`${PRODUCT_URL}/allProducts?page=${page}&limit=${pageSize}`
       },  
       transformResponse: (response) => {
@@ -52,9 +52,22 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
     // Filter products (e.g., by category, price range, etc.)
     filterProducts: builder.query({
-      query: (filterParams) => {
-        const params = new URLSearchParams(filterParams).toString();  // Convert filter params to query string
+      query: ({...filterParams}) => {
+        const params = new URLSearchParams({...filterParams,limit:PAGE_SIZE}).toString();  // Convert filter params to query string
         return `${PRODUCT_URL}/filter?${params}`;  // GET /products/filter?category=electronics&price_max=1000
+      },
+      transformResponse: (response) => {
+        if (response.success) {
+          return {
+            products: response.data.productsWithImages,  // Extract product list
+            page: response.data.page,
+            pages: response.data.pages,
+            hasMore: response.data.hasMore,
+          };
+        } else {
+          console.error("Error fetching products:", response);
+          return { products: [], page: 1, pages: 1, hasMore: false };
+        }
       },
     }),
 
