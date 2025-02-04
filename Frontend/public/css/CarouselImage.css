@@ -6,6 +6,29 @@
     margin-bottom: 100px;
 } */
 
+.text-container {
+  padding: 20px;
+  text-align: center;
+}
+
+.image-container img {
+  max-height: 400px;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .text-container {
+    text-align: center;
+    padding: 10px;
+  }
+
+  .image-container img {
+    max-height: 250px; /* Adjust for smaller screens */
+  }
+}
+
 .animate-fade-in {
     animation: fadeIn 2s ease-in-out;
   }

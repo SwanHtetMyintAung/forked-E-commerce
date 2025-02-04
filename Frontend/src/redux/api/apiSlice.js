@@ -1,14 +1,27 @@
 import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants.js";
-
-//This is base query for all api routes
 const baseQuery = fetchBaseQuery({
-     baseUrl : BASE_URL
-});
-//Export api slices 
+    baseUrl: BASE_URL,
+    prepareHeaders: (headers, { getState }) => {
+      const token = getState().auth.userInfo?.token;
+      
+      console.log("Token in Redux:", token); // ✅ Debugging Log
+  
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      } else {
+        console.warn("🚨 Token is missing in Redux!");
+      }
+  
+      return headers;
+    },
+    credentials: "include",
+  });
+  
+
 export const apiSlice = createApi({
-    reducerPath:"api",
-    baseQuery,
-    tagTypes : [ 'Product', 'Order', 'User', 'Category'],
-    endpoints : () => ({})
+  reducerPath: "api",
+  baseQuery,
+  tagTypes: ["Products", "Orders", "Users", "Categories"],
+  endpoints: () => ({}),
 });

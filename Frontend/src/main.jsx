@@ -11,6 +11,13 @@ import Login from './pages/Auth/Login.jsx';
 import Home from './pages/Home.jsx';
 import About from './pages/About.jsx';
 import Products from './pages/Products.jsx';
+import PrivateRoutes from './components/PrivateRoutes.jsx';
+import AdminDashboard from './pages/Admin/AdminDashboard.jsx';
+import AdminRoutes from './pages/Admin/AdminRoutes.jsx';
+import CreateCategory from './pages/Admin/Category/CreateCategory.jsx';
+import ManageCategory from './pages/Admin/Category/ManageCategory.jsx';
+import CreateProduct from './pages/Admin/Product/CreateProduct.jsx';
+import ManageProduct from './pages/Admin/Product/ManageProduct.jsx';
 
 //This is routes for frontend ui 
 const router = createBrowserRouter(
@@ -23,7 +30,20 @@ const router = createBrowserRouter(
        <Route index={true} path='/' element={<Home/>}/>
        <Route path='/about' element={<About/>}/>
        <Route path="/products" element={<Products/>}/>
+
+
+
+       {/* Admin Routes */}
+       <Route path='/admin/' element={<AdminRoutes/>}>
+        <Route path='dashboard' element={<AdminDashboard/>}/>
+        <Route path='category/add' element={<CreateCategory/>}/>
+        <Route path='categories/manage' element={<ManageCategory/>}/>
+        <Route path='product/add' element={<CreateProduct/>}/>
+        <Route path='products/manage' element={<ManageProduct/>}/>
+       </Route>
     </Route>
+
+   
 
   )
 )

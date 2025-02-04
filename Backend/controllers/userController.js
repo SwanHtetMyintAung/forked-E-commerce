@@ -59,12 +59,13 @@ const createUser = asyncHandler(async (req, res) => {
         await newUser.save();
 
         // Create and send a token to the frontend for the registered user
-        createToken(res, newUser._id);
+        const token = createToken(res, newUser._id);
 
         return res.status(201).json({
             success: true,
             message: "User successfully created.",
-            data: newUser
+            data: newUser,
+            token : token
         });
     } catch (error) {
         // Handle database or server errors
@@ -107,11 +108,12 @@ const loginUser = asyncHandler(async(req, res) => {
         const isPasswordValid = await bcrypt.compare(password, existingUser.password)
         //if password is valid
         if (isPasswordValid) {
-            createToken(res, existingUser._id);
+           const token =  createToken(res, existingUser._id);
             return res.status(200).json({
                 success : true,
                 message : "User have successfully logged in.",
-                data : existingUser
+                data : existingUser,
+                token : token
             });
         }else{
             //if password is not valid

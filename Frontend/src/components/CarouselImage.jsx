@@ -8,28 +8,17 @@ import "../../public/css/CarouselImage.css";
 function CarouselImage() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Update the current active slide index
   const handleSelect = (selectedIndex) => {
     setCurrentSlide(selectedIndex);
   };
 
   return (
-    <Carousel
-      interval={3000}
-      fade
-      controls={false}
-      onSelect={handleSelect}
-    >
+    <Carousel interval={3000} fade controls={false} onSelect={handleSelect}>
+      {/* First Slide */}
       <Carousel.Item>
-        <div className="d-flex align-items-center carousel-content">
-          <div
-            className={`text-left w-25 mx-auto p-4 ${
-              currentSlide === 0 ? "animate-slide-left" : ""
-            }`}
-          >
-            <h3 className={`${currentSlide === 0 ? "animate-fade-in" : ""}`}>
-              First Slide
-            </h3>
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-12 col-md-6 text-container">
             <p className={`fs-5 ${currentSlide === 0 ? "animate-slide-up" : ""}`}>
               At Mega Mart (Myanmar), we specialize in delivering innovative
               solutions to meet your unique needs.
@@ -41,32 +30,23 @@ function CarouselImage() {
             <p className={`fs-5 ${currentSlide === 0 ? "animate-slide-up" : ""}`}>
               Discover the difference with a partner that puts you first.
             </p>
-          </div>
-          <div
-            className={`image-right w-50 ${
-              currentSlide === 0 ? "animate-fade-in" : ""
-            }`}
-          >
-            <img
-              className="d-block w-100"
-              src={carosel1}
-              alt="First slide"
-              style={{ height: "400px", objectFit: "cover" }}
-            />
+            </div>
+            <div className="col-12 col-md-6 image-container">
+              <img
+                className="img-fluid"
+                src={carosel1}
+                alt="First slide"
+              />
+            </div>
           </div>
         </div>
       </Carousel.Item>
 
+      {/* Second Slide */}
       <Carousel.Item>
-        <div className="d-flex align-items-center carousel-content">
-          <div
-            className={`text-left w-25 mx-auto p-4 ${
-              currentSlide === 1 ? "animate-slide-left" : ""
-            }`}
-          >
-            <h3 className={`${currentSlide === 1 ? "animate-fade-in" : ""}`}>
-              Second Slide
-            </h3>
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-12 col-md-6 text-container">
             <p className={`fs-5 ${currentSlide === 1 ? "animate-slide-up" : ""}`}>
               We are dedicated to empowering businesses and individuals by
               providing tailored solutions that drive growth, efficiency, and
@@ -76,29 +56,23 @@ function CarouselImage() {
               With a focus on excellence and sustainability, we strive to
               exceed expectations and build lasting relationships.
             </p>
-          </div>
-          <div
-            className={`image-right w-50 ${
-              currentSlide === 1 ? "animate-slide-right" : ""
-            }`}
-          >
-            <img
-              className="d-block w-100"
-              src={carosel2}
-              alt="Second slide"
-              style={{ height: "400px", objectFit: "cover" }}
-            />
+            </div>
+            <div className="col-12 col-md-6 image-container">
+              <img
+                className="img-fluid"
+                src={carosel2}
+                alt="Second slide"
+              />
+            </div>
           </div>
         </div>
       </Carousel.Item>
 
+      {/* Third Slide */}
       <Carousel.Item>
-        <div className="d-flex align-items-center carousel-content">
-          <div
-            className={`text-left w-25 mx-auto p-4 ${
-              currentSlide === 2 ? "animate-slide-left" : ""
-            }`}
-          >
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-12 col-md-6 text-container">
             <p className={`fs-5 ${currentSlide === 2 ? "animate-slide-up" : ""}`}>
               Expertise You Can Trust:<br />
               Decades of experience in Mega Mart (Myanmar).
@@ -111,18 +85,14 @@ function CarouselImage() {
               Unmatched Support:<br />
               A team that's always by your side.
             </p>
-          </div>
-          <div
-            className={`image-right w-50 ${
-              currentSlide === 2 ? "animate-fade-in" : ""
-            }`}
-          >
-            <img
-              className="d-block w-100"
-              src={carosel3}
-              alt="Third slide"
-              style={{ height: "400px", objectFit: "cover" }}
-            />
+            </div>
+            <div className="col-12 col-md-6 image-container">
+              <img
+                className="img-fluid"
+                src={carosel3}
+                alt="Third slide"
+              />
+            </div>
           </div>
         </div>
       </Carousel.Item>
@@ -131,3 +101,4 @@ function CarouselImage() {
 }
 
 export default CarouselImage;
+

@@ -1,0 +1,114 @@
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  width: 250px;
+  height: 100vh;
+  background: #343a40;
+  color: white;
+  padding: 20px;
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(-250px);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar a {
+  color: white;
+  font-size: 1.1rem;
+  display: block;
+  padding: 10px 0;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #007bff;
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1000;
+  background: #343a40;
+  border: none;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Dashboard Content */
+.dashboard-content {
+  flex-grow: 1;
+  margin-left: 250px;
+  padding: 20px;
+  transition: margin-left 0.3s;
+}
+
+/* Blur background when sidebar is open on small screens */
+.blur-content {
+  filter: blur(5px);
+  transition: filter 0.3s ease-in-out;
+}
+
+.dark-mode {
+  background: #222;
+  color: white;
+}
+
+.light-mode {
+  background: white;
+  color: black;
+}
+
+.dashboard-card {
+  border-radius: 12px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.dashboard-card:hover {
+  transform: scale(1.05);
+}
+
+
+/* Dashboard Cards */
+.dashboard-card {
+  border-radius: 12px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.dashboard-card:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive Sidebar */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 220px;
+    transform: translateX(-220px);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .dashboard-content {
+    margin-left: 0;
+  }
+
+  .sidebar-toggle {
+    display: block;
+  }
+}

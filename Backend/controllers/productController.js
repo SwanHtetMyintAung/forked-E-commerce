@@ -2,33 +2,33 @@ import Product from "../models/productModel.js";
 import asyncHandler from '../middlewares/asyncHandler.js'
 import mongoose from "mongoose";
 import Category from '../models/categoryModel.js'
-import * as fs from 'fs';
-import * as path from 'path'
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);//get the url of this file
-const __dirname = dirname(dirname(dirname(__filename)));//get to the root folder of the project
-console.log(__dirname)
-//get the image from uploads
-async function getImageData(imagePath) {
-    try {
-      // Read the image file (replace with your file reading logic)
-      const imageBuffer = await fs.readFileSync(imagePath); 
-  
-      // Convert image to base64 (optional, depending on your frontend requirements)
-      const base64Image = Buffer.from(imageBuffer).toString('base64'); 
-  
-      return base64Image; 
-    } catch (error) {
-      console.error("Error fetching image:", error);
-      return null; 
+
+// Get __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Function to delete an image from local storage
+const deleteImage = (imagePath) => {
+    if (!imagePath || imagePath === "/default-image.jpg") return; // Skip if default image
+
+    const fullPath = path.join(__dirname, "..", imagePath);
+    if (fs.existsSync(fullPath)) {
+        fs.unlinkSync(fullPath); // Delete the file
+        console.log(`🗑️ Deleted Image: ${fullPath}`);
     }
-  }
+};
+
+
+
 //create product 
 const createProduct = asyncHandler(async (req, res) => {
     //Extract the datas from req.fields
     const { name, image, brand, quantity, category, description, price } = req.body;
+    
     // Validation for product creation
     switch (true) {
         case !name || !name.trim():
@@ -46,6 +46,7 @@ const createProduct = asyncHandler(async (req, res) => {
         case !price || isNaN(price):
             return res.status(400).json({ message: "Price field must be a valid number." });
     }
+
 
     try {
         // Create and save the product
@@ -75,11 +76,13 @@ const createProduct = asyncHandler(async (req, res) => {
 
 
 //product update
-const updateProduct = asyncHandler(async(req, res) => {
-    //Extract the datas from req.fields
-    const { name, image, brand, quantity, category, description, price } = req.fields;
+const updateProduct = asyncHandler(async (req, res) => {
+    console.log("🔹 Incoming Request:", req.method, req.url);
+    console.log("📦 Request Body:", req.body);
 
-    // Validation for product updation
+    const { name, image, brand, quantity, category, description, price } = req.body;
+
+    // Validation for product creation
     switch (true) {
         case !name || !name.trim():
             return res.status(400).json({ message: "Name field is required." });
@@ -98,34 +101,34 @@ const updateProduct = asyncHandler(async(req, res) => {
     }
 
     try {
-        // Update and save the product
-        const product = await Product.findByIdAndUpdate(
-            req.params.id,
-            { name, image, brand, quantity, category, description, price },
-            { new : true}
-        );
-        await product.save();
-
-        return res.status(201).json({
-            success: true,
-            message: "Product has been successfully uptaded.",
-            data: product,
-        });
-    } catch (error) {
-        if (error.name === "CastError") {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid data type for a field.",
-                error: error.message,
-            });
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found." });
         }
-        return res.status(500).json({
-            success: false,
-            message: "Server error. Could not update product.",
-            error: error.message,
-        });
+
+         // If new image is uploaded, delete the old image
+         if (image && product.image && image !== product.image) {
+            deleteImage(product.image);
+        }
+
+        product.name = name;
+        product.image = image || product.image;
+        product.brand = brand;
+        product.quantity = quantity;
+        product.category = category;
+        product.description = description;
+        product.price = price;
+
+        const updatedProduct = await product.save();
+        res.status(200).json(updatedProduct);
+    } catch (error) {
+        console.error("❌ Update Error:", error);
+        res.status(500).json({ message: "Server Error" });
     }
 });
+
+
+
 
 //delete products
 const deleteProductById = asyncHandler(async (req, res) => {
@@ -139,6 +142,17 @@ const deleteProductById = asyncHandler(async (req, res) => {
         });
     }
 
+    const product = await Product.findById(id);
+
+    if (!product) {
+        return res.status(404).json({
+            success : false,
+            message : "Product Not Found."
+        });
+    }
+       // Delete image from local storage
+       deleteImage(product.image);
+
     try {
         // Attempt to delete the product
         const result = await Product.deleteOne({ _id: id });
@@ -147,7 +161,7 @@ const deleteProductById = asyncHandler(async (req, res) => {
         if (result.deletedCount === 0) {
             return res.status(404).json({
                 success: false,
-                message: "Product not found or already deleted.",
+                message: "Product already deleted.",
             });
         }
 
@@ -168,53 +182,47 @@ const deleteProductById = asyncHandler(async (req, res) => {
 
 //fetch products
 const fetchProducts = asyncHandler(async (req, res) => {
-    const pageSize = Number(req.query.pageSize) || 6; // Number of products per page
-    const page = Number(req.query.page) || 1; // Get page number from query, default to 1
-
-    // Check if a keyword is provided for filtering
-    const keyword = req.query.keyword
-        ? {
-              name: {
-                  $regex: req.query.keyword,
-                  $options: "i", // Case-insensitive search
-              },
-          }
-        : {};
-
     try {
-        // Count total number of products matching the keyword
-        const count = await Product.countDocuments({ ...keyword });
+        const pageSize = Number(req.query.pageSize) || 6;
+        const page = Number(req.query.page) || 1;
+        const categoryName = req.query.category || null; // Get category name from query params
+        const searchTerm = req.query.search ? { name: { $regex: req.query.search, $options: "i" } } : {}; 
 
-        // Fetch products with pagination
-        const products = await Product.find({ ...keyword })
-            .skip(pageSize * (page - 1)) // Skip products for previous pages
-            .limit(pageSize); // Limit results to page size
+        let filter = { ...searchTerm };
 
-            // Calculate if there are more pages
-            const hasMore = page < Math.ceil(count / pageSize);
-            const productsWithImages = products.map(product => ({
-                ...product.toObject(),
-                image:fs.readFileSync(__dirname+product.image).toString("base64"),
-            }));
-            const fullResponse = {
-                productsWithImages,
-                page,
-                pages: Math.ceil(count / pageSize),
-                hasMore,
+        if (categoryName && categoryName !== "All") {
+            // 🔵 Find category ObjectId from category name
+            const category = await Category.findOne({ name: categoryName });
+            if (!category) {
+                return res.status(404).json({ success: false, message: "Category not found" });
             }
+
+            filter.category = category._id; // Set category ID as filter
+        }
+
+        const count = await Product.countDocuments(filter);
+        let productsQuery = Product.find(filter).populate("category", "name");
+
+        if (categoryName === "All" || count > pageSize) {
+            productsQuery = productsQuery.skip(pageSize * (page - 1)).limit(pageSize);
+        }
+
+        const products = await productsQuery;
+        const totalPages = Math.ceil(count / pageSize);
+
         return res.status(200).json({
             success: true,
-            data:fullResponse
+            data: { products, page, pages: totalPages },
         });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            success: false,
-            message: "Server error. Could not fetch products.",
-            error: error.message,
-        });
+        console.error("🔴 Backend Error:", error);
+        return res.status(500).json({ success: false, message: "Server error", error: error.message });
     }
 });
+
+
+
+
 
 //fetch product by ID
 const fetchProductById = asyncHandler(async (req, res) => {
@@ -268,21 +276,26 @@ const fetchAllProducts = asyncHandler(async (req, res) => {
         .sort({ createdAt: -1 }); // Ensure the field name matches your schema
       // Return success response
       const hasMore = page < Math.ceil(count / pageSize);
-      console.log(hasMore)
-      // Modify image URLs to point to the image-serving API
-      const productsWithImages = products.map(product => ({
-        ...product.toObject(),
-        image:fs.readFileSync(__dirname+product.image).toString("base64"),
-     }));
-    const fullResponse = {
-        productsWithImages,
-        page,
-        pages: Math.ceil(count / pageSize),
-        hasMore,
-    }
+    //   console.log(hasMore)
+    //   // Modify image URLs to point to the image-serving API
+    //   const productsWithImages = products.map(product => ({
+    //     ...product.toObject(),
+    //     image:fs.readFileSync(__dirname+product.image).toString("base64"),
+    //  }));
+    // const fullResponse = {
+    //     productsWithImages,
+    //     page,
+    //     pages: Math.ceil(count / pageSize),
+    //     hasMore,
+    // }
     res.status(200).json({
         success: true,
-        data:fullResponse,    
+        data:{
+            products : products,
+            page : page,
+            pages : Math.ceil(count/pageSize),
+            hasMore
+        },    
     });
     } catch (error) {  
         // Return error response
@@ -431,35 +444,42 @@ const fetchTopProducts = asyncHandler(async (req, res) => {
 // Filter products based on category and search term
 const filterProducts = async (req, res) => {
     try {
-      const { category, searchTerm } = req.query; // Extract query parameters
-  
-      // Build the query object based on parameters
-      let filter = {};
-      if (category && category !== 'all') {
-        const categoryFromDb = await Category.find( { "name" : { $regex : new RegExp(category, "i") } } );
-        // Check if category is found, then assign the first match's _id to filter
-        if (categoryFromDb.length > 0) {
-            filter.category = categoryFromDb[0]._id;
-        } else {
-            // No category found, send a response indicating no results found
-            return res.status(404).json({ success: false, message: "Category not found" });
+        const { category, searchTerm } = req.query; // Extract query parameters
+
+        let filter = {}; // Initialize filter object
+
+        // Handle category filtering
+        if (category && category !== "all") {
+            const categoryFromDb = await Category.findOne({ name: { $regex: new RegExp(category, "i") } });
+
+            if (categoryFromDb) {
+                filter.category = categoryFromDb._id; // Assign category ID
+            }
         }
-      }
-  
-      if (searchTerm) {
-        filter.name = { $regex: searchTerm, $options: 'i' }; // Search by name (case-insensitive)
-      }
-  
-      // Fetch filtered products from the database
-      const products = await Product.find({category:filter.category.toString()});
-      console.log(products, filter.category.toString())
-      // Send back the filtered products
-      return res.status(200).json({ success: true, data: products });
+
+        // Handle search filtering
+        if (searchTerm && searchTerm.trim() !== "") {
+            filter.name = { $regex: searchTerm, $options: "i" }; // Case-insensitive search
+        }
+
+        // Fetch products based on filter
+        const products = await Product.find(filter).populate("category");
+
+        // ✅ Ensure each product includes a **full image URL**
+        const productsWithImages = products.map(product => ({
+            ...product.toObject(),
+            image: product.image ? `${process.env.BASE_URL || "http://localhost:5000"}${product.image}` : null,
+        }));
+
+        return res.status(200).json({ success: true, data: productsWithImages });
+
     } catch (error) {
-      console.error('Error filtering products:', error);
-      return res.status(500).json({ success: false, error: "Server Error" });
+        console.error("Error filtering products:", error);
+        return res.status(500).json({ success: false, message: "Server Error", error: error.message });
     }
-  };
+};
+
+
 
 
 export {

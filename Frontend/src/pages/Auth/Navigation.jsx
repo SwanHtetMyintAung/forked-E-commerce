@@ -157,7 +157,7 @@ function Navigation() {
                 </Nav.Link>
                 <Nav.Link
                   as={Link}
-                  to="/product"
+                  to="/products"
                   className={`nav-tab mx-4 ${isActive('/product') ? 'active-tab' : ''}`}
                 >
                   Product

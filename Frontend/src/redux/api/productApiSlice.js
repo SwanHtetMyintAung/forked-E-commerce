@@ -1,96 +1,103 @@
 import { apiSlice } from "./apiSlice";
-import { PRODUCT_URL } from "../constants";
+import { PRODUCT_URL, UPLOAD_URL } from "../constants.js";
 
-
-
-// Create productApiSlice by injecting endpoints into the base slice
 export const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    // Fetch all products
-    fetchAllProducts: builder.query({
-      query: () => `${PRODUCT_URL}/allProducts`,  // GET /products
+    uploadImageFile : builder.mutation({
+      query : (data) => ({
+        url : `${UPLOAD_URL}/file`,
+        method : "POST",
+        body : data
+      })
     }),
-    // Fetch products (for listing, may use pagination)
+
     fetchProducts: builder.query({
-      query: ({ page, pageSize = 10 }) => {
-        console.log(page,pageSize)
-        return`${PRODUCT_URL}/allProducts?page=${page}&limit=${pageSize}`
-      },  
-      transformResponse: (response) => {
-        if (response.success) {
-          return {
-            products: response.data.productsWithImages,  // Extract product list
-            page: response.data.page,
-            pages: response.data.pages,
-            hasMore: response.data.hasMore,
-          };
-        } else {
-          console.error("Error fetching products:", response);
-          return { products: [], page: 1, pages: 1, hasMore: false };
+      query: ({ page, pageSize, category, searchTerm }) => {
+        let url = `${PRODUCT_URL}/all?page=${page}&pageSize=${pageSize}`;
+    
+        if (category && category !== "All") {
+          url += `&category=${category}`; // Add category filter
         }
+    
+        if (searchTerm && searchTerm.trim() !== "") {
+          url += `&search=${encodeURIComponent(searchTerm)}`; // Add search term filter
+        }
+    
+        return url;
       },
+      keepUnusedDataFor: 0,
+      providesTags: (result) =>
+        result?.products
+          ? [...result.products.map(({ id }) => ({ type: "Products", id })), "Products"]
+          : ["Products"],
     }),
     
 
-    // Fetch a product by its ID
-    fetchProductById: builder.query({
-      query: (id) => `${PRODUCT_URL}/${id}`,  // GET /products/:id
+    fetchAllProducts: builder.query({
+      query: () => `${PRODUCT_URL}/allProducts`,
+      keepUnusedDataFor: 5,
+      providesTags: ["Products"],
     }),
 
-    // Add a review to a product
+    fetchProductById: builder.query({
+      query: (id) => `${PRODUCT_URL}/details/${id}`,
+      providesTags: (result, error, id) => [{ type: "Products", id }],
+    }),
+
     addProductReview: builder.mutation({
       query: ({ productId, review }) => ({
-        url: `${PRODUCT_URL}/${productId}/reviews`,  // POST /products/:id/reviews
-        method: 'POST',
+        url: `${PRODUCT_URL}/addReview/${productId}`,
+        method: "POST",
         body: review,
       }),
+      invalidatesTags: (result, error, { productId }) => [{ type: "Products", id: productId }],
     }),
 
-    // Fetch top-rated products
     fetchTopProducts: builder.query({
-      query: () => `${PRODUCT_URL}/top`,  // GET /products/top
+      query: () => `${PRODUCT_URL}/topProduct`,
     }),
 
-    // Filter products (e.g., by category, price range, etc.)
     filterProducts: builder.query({
       query: (filterParams) => {
-        const params = new URLSearchParams(filterParams).toString();  // Convert filter params to query string
-        return `${PRODUCT_URL}/filter?${params}`;  // GET /products/filter?category=electronics&price_max=1000
+        const params = new URLSearchParams(filterParams).toString();
+        return `${PRODUCT_URL}/filter?${params}`;
       },
     }),
 
-    // Create a new product
     createProduct: builder.mutation({
       query: (newProduct) => ({
-        url: `${PRODUCT_URL}/create`,  // POST /products
-        method: 'POST',
+        url: `${PRODUCT_URL}/create`,
+        method: "POST",
         body: newProduct,
       }),
+      invalidatesTags: ["Products"],
     }),
 
-    // Update an existing product
     updateProduct: builder.mutation({
-      query: ({ id, updatedProduct }) => ({
-        url: `${PRODUCT_URL}/${id}`,  // PUT /products/:id
-        method: 'PUT',
-        body: updatedProduct,
+      query: ({ id, ...updatedProduct }) => ({
+          url: `${PRODUCT_URL}/update/${id}`,
+          method: "PUT",
+          body: updatedProduct, // ✅ Send the updatedProduct directly
       }),
-    }),
+      invalidatesTags: (result, error, { id }) => [{ type: "Products", id }, "Products"],
+  }),
+  
+  
 
-    // Delete a product by its ID
     deleteProductById: builder.mutation({
       query: (id) => ({
-        url: `${PRODUCT_URL}/${id}`,  // DELETE /products/:id
-        method: 'DELETE',
+        url: `${PRODUCT_URL}/delete/${id}`,
+        method: "DELETE",
       }),
+      invalidatesTags: (result, error, id) => [{ type: "Products", id }, "Products"],
     }),
   }),
 
-  overrideExisting: false,  // Don't override any existing endpoints
+  overrideExisting: false,
 });
 
-// Automatically generated hooks for use in React components
 export const {
+  useUploadImageFileMutation,
   useFetchAllProductsQuery,
   useFetchProductsQuery,
   useFetchProductByIdQuery,

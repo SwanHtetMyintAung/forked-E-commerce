@@ -1,47 +1,29 @@
 import express from "express";
-import formidable from 'express-formidable'
-import 
-{ 
-    addProductReview,
-    createProduct,
-    deleteProductById,
-    fetchAllProducts,
-    fetchProductById,
-    fetchProducts,
-    fetchTopProducts,
-    filterProducts,
-    updateProduct
- } 
-from "../controllers/productController.js";
+import formidable from "express-formidable";
+import {
+  addProductReview,
+  createProduct,
+  deleteProductById,
+  fetchAllProducts,
+  fetchProductById,
+  fetchProducts,
+  fetchTopProducts,
+  filterProducts,
+  updateProduct,
+} from "../controllers/productController.js";
 import { authenticate, authorizedAdmin } from "../middlewares/authMiddleware.js";
 
-//init the express for routes
 const router = express.Router();
 
+router.get("/all", fetchProducts);
+router.get("/details/:id", fetchProductById);
+router.get("/allProducts", fetchAllProducts);
+router.get("/topProduct", fetchTopProducts);
+router.get("/filter", filterProducts);
 
-//fetch products
-router.get('/all', fetchProducts);
-//fetch product details
-router.get('/details/:id', fetchProductById);
-//fetch all products
-router.get('/allProducts', fetchAllProducts);
-//fetch product by rating
-router.get('/topProduct', fetchTopProducts);
-//fliter products
-router.get('/filter', filterProducts);
-
-
-
-//Authenticate Routes 
-//add the reviews to product 
-router.post('/addReview/:id', authenticate, addProductReview);
-
-//Authenticate & Authorized Admin Routes
-//create the product
-router.post('/create', createProduct);
-//update the product
-router.put('/update/:id', authenticate, authorizedAdmin, formidable(), updateProduct);
-//deltete the product
-router.delete('/delete/:id', authenticate, authorizedAdmin, deleteProductById);
+router.post("/addReview/:id", authenticate, addProductReview);
+router.post("/create", authenticate, authorizedAdmin, createProduct);
+router.put("/update/:id", authenticate, authorizedAdmin,  updateProduct);
+router.delete("/delete/:id", authenticate, authorizedAdmin, deleteProductById);
 
 export default router;

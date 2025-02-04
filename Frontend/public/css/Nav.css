@@ -27,3 +27,7 @@
   border: 1px solid #ddd; /* Optional: Add a border for a cleaner look */
 }
 
+.on-top-stick{
+    position: sticky;
+}
+

@@ -5,31 +5,22 @@ import asyncHandler from "./asyncHandler.js";
 
 //authentication middleware
 const authenticate = asyncHandler(async(req, res, next)  => {
-     //verify the variable for token
-     let token;
+    let token;
 
-     //read the token from cookie
-     token = req.cookies.jwt;
-
-     //if token is exited
-     if (token) {
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            req.user = await User.findById(decoded.userId).select('-password');
-            next();
-        } catch (error) {
-            return res.status(401).json({
-                success : false,
-                message : 'Not authorized, token fail...!',
-            });
-        }
-     }else{
-        //token is not exited
-        return res.status(400).json({
-            success : false,
-            message : 'Not authorized, token not found...!'
-        })
-     }
+    // Check for token in headers
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+      token = req.headers.authorization.split(" ")[1]; // Extract token
+  
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = await User.findById(decoded.userId).select("-password"); // Attach user to request
+        next();
+      } catch (error) {
+        res.status(401).json({ success: false, message: "Not authorized, invalid token!" });
+      }
+    } else {
+      res.status(401).json({ success: false, message: "Not authorized, token not found!" });
+    }
 });
 
 

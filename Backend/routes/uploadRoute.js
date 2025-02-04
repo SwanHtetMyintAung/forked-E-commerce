@@ -1,72 +1,75 @@
-import path from 'path';
-import fs from 'fs';
 import express from 'express';
 import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+// Get __dirname in ES Module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Ensure the uploads directory exists
-const ensureUploadsDirectoryExists = () => {
-    const uploadsDir = path.resolve("uploads");
-    if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true });
-    }
-};
+const uploadsDir = path.join(__dirname, "../uploads");
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
-ensureUploadsDirectoryExists();
-
-// Initialize the Express router
+// Initialize Express Router
 const router = express.Router();
 
-// Storage configuration
+// Multer Storage Configuration
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.resolve("uploads/")); // Absolute path for the destination
+        cb(null, uploadsDir); // Save in the correct "uploads" directory
     },
     filename: (req, file, cb) => {
         const extname = path.extname(file.originalname);
-        cb(null, `${file.fieldname}-${Date.now()}${extname}`);
+        const uniqueName = `${file.fieldname}-${Date.now()}-${Math.round(Math.random() * 1E9)}${extname}`;
+        cb(null, uniqueName);
     }
 });
 
-// File validation
+// File Type Validation
 const fileFilter = (req, file, cb) => {
-    const fileTypes = /\.(jpeg|jpg|png|webp)$/; // File extensions
-    const mimetypes = /image\/(jpeg|jpg|png|webp)$/; // MIME types
+    const allowedTypes = /jpeg|jpg|png|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
 
-    const extname = path.extname(file.originalname).toLowerCase();
-    const mimetype = file.mimetype;
-
-    if (fileTypes.test(extname) && mimetypes.test(mimetype)) {
+    if (extname && mimetype) {
         cb(null, true);
     } else {
         cb(new Error("Invalid file type. Only JPEG, JPG, PNG, and WEBP images are allowed."), false);
     }
 };
 
-// Multer configuration
-const upload = multer({ storage, fileFilter });
+// Multer Upload Config
+const upload = multer({
+    storage,
+    fileFilter,
+    limits: { fileSize: 5 * 1024 * 1024 } // 5MB max file size
+});
+
+// Single Image Upload Middleware
 const uploadSingleImage = upload.single("image");
 
-// Route for file upload
+// File Upload Route
 router.post('/file', (req, res) => {
     uploadSingleImage(req, res, (err) => {
         if (err) {
-            return res.status(400).json({
-                success: false,
-                message: err.message,
-            });
+            return res.status(400).json({ success: false, message: err.message });
         }
 
-        if (req.file) {
-            return res.status(200).json({
-                success: true,
-                message: "Image uploaded successfully.",
-                image: `/uploads/${path.basename(req.file.path)}`, // Provide relative path
-            });
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: "No image file provided." });
         }
 
-        return res.status(400).json({
-            success: false,
-            message: "No image file provided.",
+        // Generate Image URL
+        const imageUrl = `/uploads/${req.file.filename}`;
+
+        return res.status(200).json({
+            success: true,
+            message: "Image uploaded successfully.",
+            image: imageUrl
         });
     });
 });
