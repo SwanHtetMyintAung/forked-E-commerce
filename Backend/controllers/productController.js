@@ -6,6 +6,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
+<<<<<<< HEAD
 
 // Get __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -24,6 +25,17 @@ const deleteImage = (imagePath) => {
 
 
 
+=======
+const __filename = fileURLToPath(import.meta.url);//get the url of this file
+const __dirname = dirname(dirname(dirname(__filename)));//get to the root folder of the project
+
+function getProductsWithImages(products){
+    return products.map(product => ({
+        ...product.toObject(),
+        image:fs.readFileSync(__dirname+product.image).toString("base64"),
+    }));
+}
+>>>>>>> 851a4f9b61dafb34f318485fb3f4c2c835247443
 //create product 
 const createProduct = asyncHandler(async (req, res) => {
     //Extract the datas from req.fields
@@ -73,8 +85,6 @@ const createProduct = asyncHandler(async (req, res) => {
         });
     }
 });
-
-
 //product update
 const updateProduct = asyncHandler(async (req, res) => {
     console.log("🔹 Incoming Request:", req.method, req.url);
@@ -126,10 +136,13 @@ const updateProduct = asyncHandler(async (req, res) => {
         res.status(500).json({ message: "Server Error" });
     }
 });
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> 851a4f9b61dafb34f318485fb3f4c2c835247443
 //delete products
 const deleteProductById = asyncHandler(async (req, res) => {
     const { id } = req.params;
@@ -177,11 +190,24 @@ const deleteProductById = asyncHandler(async (req, res) => {
         });
     }
 });
-
-
-
 //fetch products
 const fetchProducts = asyncHandler(async (req, res) => {
+<<<<<<< HEAD
+=======
+    const pageSize = Number(req.query.limit) || 6; // Number of products per page
+    const page = Number(req.query.page) || 1; // Get page number from query, default to 1
+
+    // Check if a keyword is provided for filtering
+    const keyword = req.query.keyword
+        ? {
+              name: {
+                  $regex: req.query.keyword,
+                  $options: "i", // Case-insensitive search
+              },
+          }
+        : {};
+
+>>>>>>> 851a4f9b61dafb34f318485fb3f4c2c835247443
     try {
         const pageSize = Number(req.query.pageSize) || 6;
         const page = Number(req.query.page) || 1;
@@ -190,11 +216,22 @@ const fetchProducts = asyncHandler(async (req, res) => {
 
         let filter = { ...searchTerm };
 
+<<<<<<< HEAD
         if (categoryName && categoryName !== "All") {
             // 🔵 Find category ObjectId from category name
             const category = await Category.findOne({ name: categoryName });
             if (!category) {
                 return res.status(404).json({ success: false, message: "Category not found" });
+=======
+            // Calculate if there are more pages
+            const hasMore = page < Math.ceil(count / pageSize);
+            const productsWithImages = getProductsWithImages(products)
+            const fullResponse = {
+                productsWithImages,
+                page,
+                pages: Math.ceil(count / pageSize),
+                hasMore,
+>>>>>>> 851a4f9b61dafb34f318485fb3f4c2c835247443
             }
 
             filter.category = category._id; // Set category ID as filter
@@ -219,11 +256,14 @@ const fetchProducts = asyncHandler(async (req, res) => {
         return res.status(500).json({ success: false, message: "Server error", error: error.message });
     }
 });
+<<<<<<< HEAD
 
 
 
 
 
+=======
+>>>>>>> 851a4f9b61dafb34f318485fb3f4c2c835247443
 //fetch product by ID
 const fetchProductById = asyncHandler(async (req, res) => {
     const { id } = req.params;
@@ -260,8 +300,6 @@ const fetchProductById = asyncHandler(async (req, res) => {
         });
     }
 });
-
-
 //fetch all products
 const fetchAllProducts = asyncHandler(async (req, res) => {
     const pageSize = req.query.limit || 12
@@ -306,10 +344,8 @@ const fetchAllProducts = asyncHandler(async (req, res) => {
     });
     }
 });
-
-
-  //Add product reviews
-  const addProductReview = asyncHandler(async (req, res) => {
+//Add product reviews
+const addProductReview = asyncHandler(async (req, res) => {
     const { rating, comment } = req.body; // Extract rating and comment
     const productId = req.params.id; // Extract product ID from route params
 
@@ -380,7 +416,6 @@ const fetchAllProducts = asyncHandler(async (req, res) => {
         });
     }
 });
-
 //fetch top products
 const fetchTopProducts = asyncHandler(async (req, res) => {
     try {
@@ -444,6 +479,7 @@ const fetchTopProducts = asyncHandler(async (req, res) => {
 // Filter products based on category and search term
 const filterProducts = async (req, res) => {
     try {
+<<<<<<< HEAD
         const { category, searchTerm } = req.query; // Extract query parameters
 
         let filter = {}; // Initialize filter object
@@ -480,6 +516,50 @@ const filterProducts = async (req, res) => {
 };
 
 
+=======
+        const { category, searchTerm, } = req.query;
+        const pageSize = Number(req.query.limit) || 12;
+        const page = req.query.page || 1;
+
+        // Build the query object based on parameters
+        let filter = {};
+
+        if (category && category !== 'all') {  // Use !== for strict comparison
+            const categoryFromDb = await Category.find({ name: { $regex: new RegExp(category, "i") } });
+
+            if (categoryFromDb.length > 0) {
+                filter.category = categoryFromDb[0]._id;
+            } else {
+                return res.status(404).json({ success: false, message: "Category not found" });
+            }
+        }
+
+        if (searchTerm) {
+            filter.name = { $regex: searchTerm, $options: 'i' };
+        }
+
+        const count = await Product.countDocuments({ ...filter });
+        //make the results have limits 
+        const products = await Product.find(filter)
+                                .limit(pageSize)
+                                .skip((page - 1) * pageSize)
+                                .populate("category")
+                                .exec();
+        const productsWithImages = getProductsWithImages(products);
+        const fullResponse = {
+            productsWithImages,
+            page,
+            pages : Math.ceil(count / pageSize),
+            hasMore : page < Math.ceil(count / pageSize) //if the current page is less than the available pages
+        }
+        // Send back the filtered products
+        return res.status(200).json({ success: true, data: fullResponse });
+    } catch (error) {
+        console.error('Error filtering products:', error);
+        return res.status(500).json({ success: false, error: "Server Error" });
+    }
+};
+>>>>>>> 851a4f9b61dafb34f318485fb3f4c2c835247443
 
 
 export {

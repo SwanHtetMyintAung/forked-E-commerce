@@ -6,10 +6,13 @@ import store from './redux/store.js';
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 
 //Public Routes import
+//auth
 import Register from './pages/Auth/Register.jsx';
 import Login from './pages/Auth/Login.jsx';
+//
 import Home from './pages/Home.jsx';
 import About from './pages/About.jsx';
+<<<<<<< HEAD
 import Products from './pages/Products.jsx';
 import PrivateRoutes from './components/PrivateRoutes.jsx';
 import AdminDashboard from './pages/Admin/AdminDashboard.jsx';
@@ -18,6 +21,13 @@ import CreateCategory from './pages/Admin/Category/CreateCategory.jsx';
 import ManageCategory from './pages/Admin/Category/ManageCategory.jsx';
 import CreateProduct from './pages/Admin/Product/CreateProduct.jsx';
 import ManageProduct from './pages/Admin/Product/ManageProduct.jsx';
+=======
+import NotFound from './pages/NotFound.jsx'
+//product
+import Products from './pages/Product/Products.jsx';
+import FilteredProduct from './pages/Product/FilteredProduct.jsx';
+import ProductLayout from './pages/Product/ProductLayout.jsx';
+>>>>>>> 851a4f9b61dafb34f318485fb3f4c2c835247443
 
 //This is routes for frontend ui 
 const router = createBrowserRouter(
@@ -25,6 +35,7 @@ const router = createBrowserRouter(
     //Home route or parent route
     <Route path='/' element={<App/>}>
       {/* Public Routes */}
+<<<<<<< HEAD
        <Route path='/register' element={<Register/>}/>
        <Route path='/login' element={<Login/>}/>
        <Route index={true} path='/' element={<Home/>}/>
@@ -41,6 +52,18 @@ const router = createBrowserRouter(
         <Route path='product/add' element={<CreateProduct/>}/>
         <Route path='products/manage' element={<ManageProduct/>}/>
        </Route>
+=======
+      <Route path='/register' element={<Register/>}/>
+      <Route path='/login' element={<Login/>}/>
+      <Route index={true} path='/' element={<Home/>}/>
+      <Route path='/about' element={<About/>}/>
+      
+      <Route path="/products" element={<ProductLayout/>}>
+        <Route index  element={<Products/>}/>
+        <Route path="filter" element={<FilteredProduct/>}/>
+      </Route>
+      <Route path="*" element={<NotFound/>}/>
+>>>>>>> 851a4f9b61dafb34f318485fb3f4c2c835247443
     </Route>
 
    

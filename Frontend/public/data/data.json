@@ -1,0 +1,210 @@
+[
+    {
+        "name": "iPhone 15 Pro Max",
+        "image": "./iphone15ProMax.jpg",
+        "brand": "Apple",
+        "category": "Smartphone",
+        "description": "Latest iPhone with cutting-edge features and performance.",
+        "price": "1,099$"
+    },
+    {
+        "name": "Samsung Galaxy S24 Ultra",
+        "image": "./galaxyS24Ultra.jpg",
+        "brand": "Samsung",
+        "category": "Smartphone",
+        "description": "Best Android phone with a stunning camera and display.",
+        "price": "1,199$"
+    },
+    {
+        "name": "MacBook Pro 16\"",
+        "image": "./macbookPro16.jpg",
+        "brand": "Apple",
+        "category": "Laptop",
+        "description": "Powerful laptop for professionals with M1 Pro chip.",
+        "price": "2,499$"
+    },
+    {
+        "name": "Dell XPS 13",
+        "image": "./dellXPS13.jpg",
+        "brand": "Dell",
+        "category": "Laptop",
+        "description": "Sleek, lightweight, and powerful ultrabook.",
+        "price": "1,299$"
+    },
+    {
+        "name": "iPad Pro 12.9\"",
+        "image": "./ipadPro12.jpg",
+        "brand": "Apple",
+        "category": "Tablet",
+        "description": "Professional tablet with excellent display and power.",
+        "price": "1,099$"
+    },
+    {
+        "name": "Samsung Galaxy Tab S8 Ultra",
+        "image": "./galaxyTabS8Ultra.jpg",
+        "brand": "Samsung",
+        "category": "Tablet",
+        "description": "Large tablet with premium performance and S Pen support.",
+        "price": "1,100$"
+    },
+    {
+        "name": "Apple Watch Ultra",
+        "image": "./appleWatchUltra.png",
+        "brand": "Apple",
+        "category": "Smartwatch",
+        "description": "Premium smartwatch designed for extreme sports and outdoor use.",
+        "price": "799$"
+    },
+    {
+        "name": "Samsung Galaxy Watch 6",
+        "image": "./galaxyWatch6.jpg",
+        "brand": "Samsung",
+        "category": "Smartwatch",
+        "description": "Stylish smartwatch with health tracking and fitness features.",
+        "price": "399$"
+    },
+    {
+        "name": "Sony WH-1000XM5",
+        "image": "./sonyWH1000XM5.jpg",
+        "brand": "Sony",
+        "category": "Headphones",
+        "description": "Premium noise-canceling headphones with excellent sound quality.",
+        "price": "349$"
+    },
+    {
+        "name": "Bose QuietComfort 45",
+        "image": "./boseQuietComfort45.jpg",
+        "brand": "Bose",
+        "category": "Headphones",
+        "description": "Comfortable and effective noise-canceling headphones.",
+        "price": "329$"
+    },
+    {
+        "name": "JBL Charge 5",
+        "image": "./jblCharge5.jpg",
+        "brand": "JBL",
+        "category": "Speakers",
+        "description": "Powerful wireless speaker with deep bass and long battery life.",
+        "price": "179$"
+    },
+    {
+        "name": "Ultimate Ears MEGABOOM 3",
+        "image": "./UEmegaboom3.jpg",
+        "brand": "Ultimate Ears",
+        "category": "Speakers",
+        "description": "Durable and waterproof portable speaker with 360-degree sound.",
+        "price": "199$"
+    },
+    {
+        "name": "Philips Sonicare DiamondClean",
+        "image": "./sonicareDiamondClean.jpg",
+        "brand": "Philips",
+        "category": "Health & Personal Care",
+        "description": "Electric toothbrush for superior oral care.",
+        "price": "229$"
+    },
+    {
+        "name": "Oral-B iO Series 9",
+        "image": "./oralBioseries9.jpg",
+        "brand": "Oral-B",
+        "category": "Health & Personal Care",
+        "description": "Smart electric toothbrush with AI-driven insights for brushing.",
+        "price": "299$"
+    },
+    {
+        "name": "LG OLED C1 Series 55-inch",
+        "image": "./lgOLED55.jpg",
+        "brand": "LG",
+        "category": "TV",
+        "description": "Stunning OLED display for the ultimate TV viewing experience.",
+        "price": "1,299$"
+    },
+    {
+        "name": "Samsung QN90B Neo QLED",
+        "image": "./samsungQN90B.jpg",
+        "brand": "Samsung",
+        "category": "TV",
+        "description": "Brilliant 4K QLED with incredible brightness and contrast.",
+        "price": "1,799$"
+    },
+    {
+        "name": "Ring Video Doorbell 4",
+        "image": "./ringDoorbell4.jpg",
+        "brand": "Ring",
+        "category": "Home Security",
+        "description": "Smart video doorbell with enhanced video quality and motion detection.",
+        "price": "199$"
+    },
+    {
+        "name": "Nest Cam IQ Outdoor",
+        "image": "./nestCamIQ.jpg",
+        "brand": "Google Nest",
+        "category": "Home Security",
+        "description": "High-definition outdoor security camera with facial recognition.",
+        "price": "349$"
+    },
+    {
+        "name": "PlayStation 5",
+        "image": "./playStation5.jpg",
+        "brand": "Sony",
+        "category": "Gaming Console",
+        "description": "Next-gen gaming console with incredible graphics and speed.",
+        "price": "499$"
+    },
+    {
+        "name": "Xbox Series X",
+        "image": "./xboxSeriesX.jpg",
+        "brand": "Microsoft",
+        "category": "Gaming Console",
+        "description": "Powerful gaming console with 4K resolution and fast load times.",
+        "price": "499$"
+    },
+    {
+        "name": "Amazon Kindle Oasis",
+        "image": "./kindleOasis.jpg",
+        "brand": "Amazon",
+        "category": "E-Reader",
+        "description": "E-reader with a high-resolution display and adjustable warm light.",
+        "price": "249$"
+    },
+    {
+        "name": "Barnes & Noble Nook GlowLight 4",
+        "image": "./nookGlowLight4.jpg",
+        "brand": "Barnes & Noble",
+        "category": "E-Reader",
+        "description": "Compact e-reader with a sharp, easy-on-the-eyes display.",
+        "price": "179$"
+    },
+    {
+        "name": "GoPro HERO11 Black",
+        "image": "./goproHERO11.jpg",
+        "brand": "GoPro",
+        "category": "Camera",
+        "description": "Action camera with 5.3K video and advanced stabilization.",
+        "price": "499$"
+    },
+    {
+        "name": "Sony Alpha 7 IV",
+        "image": "./sonyAlpha7IV.jpg",
+        "brand": "Sony",
+        "category": "Camera",
+        "description": "Full-frame mirrorless camera with exceptional photo and video quality.",
+        "price": "2,498$"
+    },
+    {
+        "name": "DJI Air 2S",
+        "image": "./djiAir2S.jpg",
+        "brand": "DJI",
+        "category": "Drone",
+        "description": "Compact drone with 5.4K camera and advanced flight features.",
+        "price": "999$"
+    },
+    {
+        "name": "Autel Robotics EVO Lite+",
+        "image": "./autelEVO.jpg",
+        "brand": "Autel Robotics",
+        "category": "Drone",
+        "description": "High-performance drone with 50MP camera and 4K video.",
+        "price": "1,149$"
+    }
+]
