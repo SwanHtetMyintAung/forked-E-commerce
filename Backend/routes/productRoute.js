@@ -8,7 +8,6 @@ import {
   fetchProductById,
   fetchProducts,
   fetchTopProducts,
-  filterProducts,
   updateProduct,
 } from "../controllers/productController.js";
 import { authenticate, authorizedAdmin } from "../middlewares/authMiddleware.js";
@@ -19,7 +18,6 @@ router.get("/all", fetchProducts);
 router.get("/details/:id", fetchProductById);
 router.get("/allProducts", fetchAllProducts);
 router.get("/topProduct", fetchTopProducts);
-router.get("/filter", filterProducts);
 
 router.post("/addReview/:id", authenticate, addProductReview);
 router.post("/create", authenticate, authorizedAdmin, createProduct);

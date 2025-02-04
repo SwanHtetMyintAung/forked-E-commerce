@@ -1,14 +1,11 @@
 import { apiSlice } from "./apiSlice";
-<<<<<<< HEAD
 import { PRODUCT_URL, UPLOAD_URL } from "../constants.js";
 
-=======
-import { PRODUCT_URL } from "../constants";
-const PAGE_SIZE = 6;
+
+
 
 
 // Create productApiSlice by injecting endpoints into the base slice
->>>>>>> 851a4f9b61dafb34f318485fb3f4c2c835247443
 export const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     uploadImageFile : builder.mutation({
@@ -20,28 +17,11 @@ export const productApiSlice = apiSlice.injectEndpoints({
     }),
 
     fetchProducts: builder.query({
-<<<<<<< HEAD
       query: ({ page, pageSize, category, searchTerm }) => {
         let url = `${PRODUCT_URL}/all?page=${page}&pageSize=${pageSize}`;
     
         if (category && category !== "All") {
           url += `&category=${category}`; // Add category filter
-=======
-      query: ({ page, pageSize = PAGE_SIZE }) => {
-        return`${PRODUCT_URL}/allProducts?page=${page}&limit=${pageSize}`
-      },  
-      transformResponse: (response) => {
-        if (response.success) {
-          return {
-            products: response.data.productsWithImages,  // Extract product list
-            page: response.data.page,
-            pages: response.data.pages,
-            hasMore: response.data.hasMore,
-          };
-        } else {
-          console.error("Error fetching products:", response);
-          return { products: [], page: 1, pages: 1, hasMore: false };
->>>>>>> 851a4f9b61dafb34f318485fb3f4c2c835247443
         }
     
         if (searchTerm && searchTerm.trim() !== "") {
@@ -83,29 +63,9 @@ export const productApiSlice = apiSlice.injectEndpoints({
     }),
 
     filterProducts: builder.query({
-<<<<<<< HEAD
       query: (filterParams) => {
         const params = new URLSearchParams(filterParams).toString();
-        return `${PRODUCT_URL}/filter?${params}`;
-=======
-      query: ({...filterParams}) => {
-        const params = new URLSearchParams({...filterParams,limit:PAGE_SIZE}).toString();  // Convert filter params to query string
-        return `${PRODUCT_URL}/filter?${params}`;  // GET /products/filter?category=electronics&price_max=1000
->>>>>>> 851a4f9b61dafb34f318485fb3f4c2c835247443
-      },
-      transformResponse: (response) => {
-        if (response.success) {
-          return {
-            products: response.data.productsWithImages,  // Extract product list
-            page: response.data.page,
-            pages: response.data.pages,
-            hasMore: response.data.hasMore,
-          };
-        } else {
-          console.error("Error fetching products:", response);
-          return { products: [], page: 1, pages: 1, hasMore: false };
-        }
-      },
+        return `${PRODUCT_URL}/filter?${params}`;}
     }),
 
     createProduct: builder.mutation({

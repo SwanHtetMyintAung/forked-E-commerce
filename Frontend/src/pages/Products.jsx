@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, Col, Container, Row, Spinner, Pagination, Button, Modal } from "react-bootstrap";
 import { useFetchProductsQuery } from "../redux/api/productApiSlice.js";
-import ProductSearchBar from "../components/ProductSearchBar";
+import ProductSearchBar from "../components/product/ProductSearchBar.jsx";
 
 const ProductCard = ({ name, image, brand, category, description, price, quantity }) => {
   const imageUrl = image?.startsWith("http") ? image : `http://localhost:5000${image}`;
