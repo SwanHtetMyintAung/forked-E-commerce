@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, InputGroup } from "react-bootstrap";
-import { BASE_URL, CATEGORY_URL } from "../../redux/constants.js";
+import { BASE_URL, CATEGORY_URL } from "../redux/constants.js";
 
 const ProductSearchBar = ({ setSelectedCategory, setSearchTerm }) => {
   const [category, setCategory] = useState("All");

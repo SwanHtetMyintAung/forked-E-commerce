@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Alert, Spinner } from "react-bootstrap";
 import {
     useFetchAllCategoriesQuery,
-} from "../../../redux/api/categorySlice.js";
+} from "../../../redux/api/categoryApiSlice.js";
 import {
   useUploadImageFileMutation,
   useCreateProductMutation,

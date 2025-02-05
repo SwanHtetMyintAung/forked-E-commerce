@@ -13,6 +13,7 @@ import categoryRoutes from './routes/categoryRoute.js';
 import productRoutes from './routes/productRoute.js';
 import uploadRoute from './routes/uploadRoute.js';
 import orderRoutes from './routes/orderRoute.js';
+import cartRoutes from './routes/cartRoute.js';
 
 // Configurations
 dotenv.config();
@@ -44,6 +45,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/uploads', uploadRoute);
 app.use('/api/orders', orderRoutes);
+app.use('/api/carts',cartRoutes);
 
 // Serve Static Files (Images)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

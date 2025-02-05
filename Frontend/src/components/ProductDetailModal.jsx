@@ -2,12 +2,12 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function ProductDetailModel({handleClose, show, description, name, image, price, brand, quantity}) {
+function ProductDetailModel({setShowModal, show, description, name, image, price, brand, quantity}) {
  
   return (
     <>
       {/* Modal for Product Details */}
-      <Modal show={show} onHide={handleClose} centered>
+      <Modal show={show} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>{name}</Modal.Title>
         </Modal.Header>
@@ -27,7 +27,7 @@ function ProductDetailModel({handleClose, show, description, name, image, price,
           <p className="text-muted">{description}</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Close</Button>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
         </Modal.Footer>
       </Modal>
     </>

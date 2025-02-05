@@ -1,15 +1,21 @@
 import React from 'react';
 import { useState } from 'react';
-import { Container, Navbar, Nav, NavDropdown, Form, Button } from 'react-bootstrap';
+import { Container, Navbar, Nav, NavDropdown, Form, Button, Badge } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import {  useSelector } from 'react-redux';
 import '../../../public/css/Nav.css';
 import Model from '../../components/Model.jsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  useGetCartQuery
+} from "../../redux/api/cartApiSlice.js";
 
 function Navigation() {
   const [show, setShow] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);
   const isAdmin = userInfo?.data?.isAdmin;
+  const { data: cart, isLoading, error, refetch } = useGetCartQuery();
 
  
   const location = useLocation();
@@ -138,6 +144,14 @@ function Navigation() {
                     Logout
                   </NavDropdown.Item>
                 </NavDropdown>
+                <Nav.Link
+                  as={Link}
+                  to="/user/cart"
+                  className={`nav-tab mx-4 ${isActive('/cart') ? 'active-tab' : ''}`}
+                >
+                 <FontAwesomeIcon icon={faCartPlus} className='me-2' />Your Cart 
+                 <Badge className='ms-1'>{cart?.cartItems.length}</Badge>
+                </Nav.Link>
               </>
             ) : (
               <>

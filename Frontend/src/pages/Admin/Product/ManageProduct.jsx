@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Table, Button, Spinner, Pagination, Modal, Form } from "react-bootstrap";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faEdit, faEye } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import {
     useFetchProductsQuery,
@@ -12,7 +12,7 @@ import {
 } from "../../../redux/api/productApiSlice.js";
 import {
     useFetchAllCategoriesQuery,
-} from "../../../redux/api/categorySlice.js";
+} from "../../../redux/api/categoryApiSlice.js";
 
 const ManageProductsPage = () => {
     const [page, setPage] = useState(1);
@@ -21,16 +21,16 @@ const ManageProductsPage = () => {
     const { data, isLoading, error, refetch } = useFetchProductsQuery({ page, pageSize });
     const { data: categoriesData, isLoading: categoriesLoading } = useFetchAllCategoriesQuery();
     const [updateProduct, { isLoading: updating }] = useUpdateProductMutation();
-    const [deleteProduct, {isLoading : deleting}] = useDeleteProductByIdMutation();
+    const [deleteProduct, { isLoading: deleting }] = useDeleteProductByIdMutation();
     const [uploadImage] = useUploadImageFileMutation();
 
     const products = data?.data?.products || [];
     const totalPages = data?.data?.pages || 1;
     const currentPage = data?.data?.page;
-    
+
     console.log(data?.data);
-    
-    
+
+
     // Modal states
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState(""); // "edit" or "delete"
@@ -51,7 +51,7 @@ const ManageProductsPage = () => {
     const handleShowModal = (product, mode) => {
         setCurrentProduct(product);
         setModalMode(mode);
-        if (mode === "edit") {
+        if (mode === "edit" || mode === "detail") {
             setUpdatedProduct({ ...product });
         }
         setShowModal(true);
@@ -100,18 +100,18 @@ const ManageProductsPage = () => {
             toast.error("Please upload an image before updating the product.");
             return;
         }
-    
+
         if (!currentProduct || !currentProduct._id) {
             toast.error("Invalid product ID. Cannot update.");
             return;
         }
-    
+
         try {
             console.log("🚀 Sending Update Request:", {
                 id: currentProduct._id,
                 ...updatedProduct
             });
-    
+
             const response = await updateProduct({
                 id: currentProduct._id,
                 name: updatedProduct.name,
@@ -122,7 +122,7 @@ const ManageProductsPage = () => {
                 description: updatedProduct.description,
                 price: Number(updatedProduct.price)
             }).unwrap();
-    
+
             console.log("✅ Update Success:", response);
             toast.success("Product updated successfully!");
             refetch();
@@ -132,10 +132,10 @@ const ManageProductsPage = () => {
         }
         handleCloseModal();
     };
-    
-    
-    
-    
+
+
+
+
 
     // Handle Delete Product
     const handleDeleteProduct = async () => {
@@ -193,15 +193,21 @@ const ManageProductsPage = () => {
                                             <td>{product.name}</td>
                                             <td>${product.price}</td>
                                             <td>
+                                                <Button variant="success"
+                                                    title="Detail"
+                                                    onClick={() => handleShowModal(product, "detail")}>
+                                                    <FontAwesomeIcon icon={faEye} />
+                                                </Button>
                                                 <Button
                                                     variant="warning"
-                                                    className="me-2"
+                                                    className="m-2"
                                                     onClick={() => handleShowModal(product, "edit")}
+                                                    title="Edit"
                                                 >
-                                                    <FontAwesomeIcon icon={faEdit} /> Edit
+                                                    <FontAwesomeIcon icon={faEdit} />
                                                 </Button>
-                                                <Button variant="danger" onClick={() => handleShowModal(product, "delete")}>
-                                                    <FontAwesomeIcon icon={faTrash} /> Delete
+                                                <Button variant="danger" title="Delete" onClick={() => handleShowModal(product, "delete")}>
+                                                    <FontAwesomeIcon icon={faTrash} />
                                                 </Button>
                                             </td>
                                         </motion.tr>
@@ -215,30 +221,56 @@ const ManageProductsPage = () => {
                         </Table>
 
                         {/* Pagination */}
-                       {products.length > 0 && totalPages > 1  && (
-                             <Pagination className="justify-content-center">
-                               {[...Array(totalPages)].map((_, index) => (
-                                 <Pagination.Item
-                                   key={index}
-                                   active={index + 1 === currentPage}
-                                   onClick={() => setPage(index + 1)}
-                                 >
-                                   {index + 1}
-                                 </Pagination.Item>
-                               ))}
-                             </Pagination>
-                           )}
+                        {products.length > 0 && totalPages > 1 && (
+                            <Pagination className="justify-content-center">
+                                {[...Array(totalPages)].map((_, index) => (
+                                    <Pagination.Item
+                                        key={index}
+                                        active={index + 1 === currentPage}
+                                        onClick={() => setPage(index + 1)}
+                                    >
+                                        {index + 1}
+                                    </Pagination.Item>
+                                ))}
+                            </Pagination>
+                        )}
                     </>
                 )}
             </motion.div>
 
             {/* Modal for Edit & Delete */}
+         
+
+
+
+
+
             <Modal show={showModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>{modalMode === "edit" ? "Edit Product" : "Confirm Delete"}</Modal.Title>
+                    <Modal.Title>
+                        {modalMode === "detail" ? "Product Details" : modalMode === "edit" ? "Edit Product" : "Confirm Delete"}
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {modalMode === "edit" ? (
+                    {modalMode === "detail" ? (
+                        <>
+                            <img
+                                src={updatedProduct.image?.startsWith("http") ? image : `http://localhost:5000${updatedProduct.image}`}
+                                alt={name}
+                                className="img-fluid mb-3"
+                                style={{ maxHeight: "300px", objectFit: "cover" }}
+                            />
+                            <h4 className="fs-5 text-dark">Name: <strong>{updatedProduct.name}</strong></h4>
+                            <p className="fs-5 text-dark">Price: <strong>${updatedProduct.price}</strong></p>
+                            <p className="fs-5 text-dark">Category: <strong>{updatedProduct.category?.name}</strong></p>
+                            <p className="fs-5 text-dark">Brand: <strong>{updatedProduct.brand}</strong></p>
+                            <p className='fs-5 text-dark me-4'>
+                                In Stock
+                                <Button variant="warning ms-2">{updatedProduct.quantity}</Button>
+                            </p>
+                            <p className="text-muted">{updatedProduct.description}</p>
+                        </>
+                    ) : modalMode === "edit" ? (
                         <>
                             {/* Image Upload */}
                             <Form.Group className="mb-3">
@@ -333,12 +365,12 @@ const ManageProductsPage = () => {
                         </>
                     ) : (
                         <>
-                          <p className="text-dark">Are you sure you want to delete this product?</p>
+                        <p className="text-dark">Are you sure you want to delete this product?</p>
 
-                         <Button onClick={handleDeleteProduct} variant="danger" disabled={deleting}>
-                           {deleting ? "Deleting..." : "Delete Product"}
-                         </Button>
-                        </>
+                        <Button onClick={handleDeleteProduct} variant="danger" disabled={deleting}>
+                            {deleting ? "Deleting..." : "Delete Product"}
+                        </Button>
+                    </>
                     )}
                 </Modal.Body>
             </Modal>

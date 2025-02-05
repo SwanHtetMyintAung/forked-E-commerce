@@ -7,7 +7,7 @@ import {
   useFetchCategoriesQuery,
   useDeleteCategoryMutation,
   useUpdateCategoryMutation,
-} from "../../../redux/api/categorySlice.js";
+} from "../../../redux/api/categoryApiSlice.js";
 import { toast } from "react-toastify";
 
 function ManageCategory() {

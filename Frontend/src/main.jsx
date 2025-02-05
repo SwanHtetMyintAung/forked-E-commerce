@@ -21,40 +21,47 @@ import CreateCategory from './pages/Admin/Category/CreateCategory.jsx';
 import ManageCategory from './pages/Admin/Category/ManageCategory.jsx';
 import CreateProduct from './pages/Admin/Product/CreateProduct.jsx';
 import ManageProduct from './pages/Admin/Product/ManageProduct.jsx';
+import UserRoutes from './pages/User/UserRoutes.jsx';
+import Cart from './pages/User/Cart.jsx';
 
 
 //This is routes for frontend ui 
 const router = createBrowserRouter(
   createRoutesFromElements(
     //Home route or parent route
-    <Route path='/' element={<App/>}>
+    <Route path='/' element={<App />}>
       {/* Public Routes */}
 
-       <Route path='/register' element={<Register/>}/>
-       <Route path='/login' element={<Login/>}/>
-       <Route index={true} path='/' element={<Home/>}/>
-       <Route path='/about' element={<About/>}/>
-       <Route path="/products" element={<Products/>}/>
+      <Route path='/register' element={<Register />} />
+      <Route path='/login' element={<Login />} />
+      <Route index={true} path='/' element={<Home />} />
+      <Route path='/about' element={<About />} />
+      <Route path="/products" element={<Products />} />
 
 
 
-       {/* Admin Routes */}
-       <Route path='/admin/' element={<AdminRoutes/>}>
-        <Route path='dashboard' element={<AdminDashboard/>}/>
-        <Route path='category/add' element={<CreateCategory/>}/>
-        <Route path='categories/manage' element={<ManageCategory/>}/>
-        <Route path='product/add' element={<CreateProduct/>}/>
-        <Route path='products/manage' element={<ManageProduct/>}/>
-       </Route>
+      {/* Admin Routes */}
+      <Route path='/admin/' element={<AdminRoutes />}>
+        <Route path='dashboard' element={<AdminDashboard />} />
+        <Route path='category/add' element={<CreateCategory />} />
+        <Route path='categories/manage' element={<ManageCategory />} />
+        <Route path='product/add' element={<CreateProduct />} />
+        <Route path='products/manage' element={<ManageProduct />} />
+      </Route>
+
+      {/* User Routes */}
+      <Route path='/user/' element={<UserRoutes/>}>
+         <Route path='cart' element={<Cart/>} />
+      </Route>
     </Route>
 
-   
+
 
   )
 )
 
 createRoot(document.getElementById('root')).render(
-   <Provider store={store}>
+  <Provider store={store}>
     <RouterProvider router={router} />
-   </Provider>
+  </Provider>
 )

@@ -38,4 +38,18 @@ const  authorizedAdmin = asyncHandler(async(req, res, next) => {
     }
 });
 
-export { authenticate, authorizedAdmin };
+//user authorization middleware
+const authorizedUser = asyncHandler(async(req, res, next) => {
+  //if req.user and req.user is isAdmin : false,
+  if (req.user && !req.user.isAdmin) {
+     next();
+  }else{
+    //if not
+    return res.status(401).json({
+      success : false,
+      message : 'Not a normal user..'
+    });
+  }
+})
+
+export { authenticate, authorizedAdmin, authorizedUser };

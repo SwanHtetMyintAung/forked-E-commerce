@@ -3,7 +3,7 @@ import { Container, Form, Button, Spinner } from "react-bootstrap";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useCreateCategoriesMutation } from "../../../redux/api/categorySlice.js";
+import { useCreateCategoriesMutation } from "../../../redux/api/categoryApiSlice.js";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
