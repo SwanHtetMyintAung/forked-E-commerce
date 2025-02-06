@@ -154,7 +154,7 @@ function ManageCategory() {
               </Form.Group>
             </>
           ) : (
-            <p>Are you sure you want to delete this category?</p>
+            <p className="text-dark">Are you sure you want to delete this category?</p>
           )}
         </Modal.Body>
         <Modal.Footer>

@@ -3,11 +3,14 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import ProductDetailModal from './ProductDetailModal.jsx';
 import OrderModal from './OrderModal.jsx';
+import { useSelector } from 'react-redux';
 
 const ProductCard = ({ _id, name, image, brand, category, description, price, quantity }) => {
   const imageUrl = image?.startsWith("http") ? image : `http://localhost:5000${image}`;
   const [showModal, setShowModal] = useState(false);
   const [showOrderModal, setShowOrderModal] = useState(false);
+  const { userInfo } = useSelector((state) => state.auth);
+   const isAdmin = userInfo?.data?.isAdmin;
 
   return (
     <>
@@ -34,10 +37,10 @@ const ProductCard = ({ _id, name, image, brand, category, description, price, qu
               <Button variant="success" size="sm" onClick={() => setShowModal(true)}>
                 View Details
               </Button>
-              {/* Order Button */}
+              {userInfo && !isAdmin &&  
               <Button variant="info" size="sm" onClick={() => setShowOrderModal(true)}>
                 Order
-              </Button>
+              </Button>}
             </div>
           </div>
         </Card.Body>
