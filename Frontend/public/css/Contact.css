@@ -1,0 +1,63 @@
+.contact-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    padding: 20px;
+    
+  }.contact-form {
+    display: flex;
+    flex-direction: column;
+    width: 80%; /* Adjust width as needed */
+    max-width: 600px;  /* Set a maximum width */
+    margin-bottom: 20px; /* Space between form and other contacts */
+  }.form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;  /* Make labels stack on top of inputs */
+    margin-bottom: 5px;
+  }
+  
+  input,
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+  }
+  
+  textarea {
+    resize: vertical; /* Allow vertical resizing of textarea */
+  }.submit-button {
+    background-color: #007bff; /* Example: Blue button */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }.submit-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }.other-contacts {
+    text-align: center; /* Center the "Or reach us through" text */
+    margin-top: 20px;
+  }.contact-info {
+    margin-bottom: 20px;
+  }
+  .social-media {
+    display: flex;
+    justify-content: center; /* Center social media icons */
+  }.social-media a {
+    margin: 0 10px; /* Space between icons */
+  }.social-media img {
+    width: 30px;  /* Adjust icon size as needed */
+    height: 30px;
+  }
+  
+  /* Responsive adjustments (example) */
+  @media (max-width: 400px) {
+  .contact-form {
+      width: 95%; /* Make form wider on smaller screens */
+    }
+  }

@@ -12,19 +12,22 @@ import Login from './pages/Auth/Login.jsx';
 //
 import Home from './pages/Home.jsx';
 import About from './pages/About.jsx';
-
-import Products from './pages/Products.jsx';
-import PrivateRoutes from './components/PrivateRoutes.jsx';
-import AdminDashboard from './pages/Admin/AdminDashboard.jsx';
-import AdminRoutes from './pages/Admin/AdminRoutes.jsx';
-import CreateCategory from './pages/Admin/Category/CreateCategory.jsx';
-import ManageCategory from './pages/Admin/Category/ManageCategory.jsx';
-import CreateProduct from './pages/Admin/Product/CreateProduct.jsx';
-import ManageProduct from './pages/Admin/Product/ManageProduct.jsx';
+//user
+import Profile from './pages/User/Profile.jsx';
 import UserRoutes from './pages/User/UserRoutes.jsx';
 import Cart from './pages/User/Cart.jsx';
 
-
+import Products from './pages/Products.jsx';
+import PrivateRoutes from './components/PrivateRoutes.jsx';
+import AdminRoutes from './pages/Admin/AdminRoutes.jsx';
+import CreateProduct from './pages/Admin/Product/CreateProduct.jsx';
+import Contact from './pages/Contact.jsx';
+//admin privillage
+import AdminDashboard from './pages/Admin/AdminDashboard.jsx';
+import ManageCategory from './pages/Admin/Category/ManageCategory.jsx';
+import CreateCategory from './pages/Admin/Category/CreateCategory.jsx';
+import ManageProduct from './pages/Admin/Product/ManageProduct.jsx';
+import ManageUser from './pages/Admin/User/ManageUser.jsx';
 //This is routes for frontend ui 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -37,7 +40,7 @@ const router = createBrowserRouter(
       <Route index={true} path='/' element={<Home />} />
       <Route path='/about' element={<About />} />
       <Route path="/products" element={<Products />} />
-
+      <Route path='/contact' element={<Contact/>}/>
 
 
       {/* Admin Routes */}
@@ -47,11 +50,13 @@ const router = createBrowserRouter(
         <Route path='categories/manage' element={<ManageCategory />} />
         <Route path='product/add' element={<CreateProduct />} />
         <Route path='products/manage' element={<ManageProduct />} />
+        <Route path='users/manage' element={<ManageUser/>}/>
       </Route>
 
       {/* User Routes */}
       <Route path='/user/' element={<UserRoutes/>}>
          <Route path='cart' element={<Cart/>} />
+         <Route path="profile" element={<Profile/>}/>
       </Route>
     </Route>
 

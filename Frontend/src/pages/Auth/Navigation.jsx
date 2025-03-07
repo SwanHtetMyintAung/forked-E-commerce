@@ -131,7 +131,7 @@ function Navigation() {
                 >
                   <NavDropdown.Item
                     as={Link}
-                    to="/profile"
+                    to="/user/profile"
                     className="nav-dropdown-item"
                   >
                     Profile
