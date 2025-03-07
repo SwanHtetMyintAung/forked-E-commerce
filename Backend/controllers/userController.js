@@ -4,6 +4,7 @@ import validator from 'validator'
 import createToken from '../utils/createToken.js'
 import bcrypt from 'bcrypt'
 import mongoose from "mongoose"
+import { _computeSegments } from "chart.js/helpers"
 
 //create user
 const createUser = asyncHandler(async (req, res) => {
@@ -251,7 +252,6 @@ const getUserById = asyncHandler(async (req, res) => {
 const updateUserById = asyncHandler(async(req, res) => {
     //Retrive user by ID from the request parameters
     const user = await User.findById(req.params.id);
-
     //Check if the user exists
     if (!user) {
         return res.status(404).json({
@@ -280,8 +280,17 @@ const updateUserById = asyncHandler(async(req, res) => {
     if (req.body.password) {
         const password = req.body.password;
 
-        // Validation: Check if the password is at least 8 characters long
-        if (!validator.isLength(password, { min: 8 })) {
+        const isPasswordValid = await bcrypt.compare(password, user.password)
+        if(!isPasswordValid){
+            return res.status(400).json({
+                success:false,
+                message:"Password didn't matched!"
+            })
+        }
+        //if password is valid
+        // Validation: Check if the new password is at least 8 characters long
+        const newPassword = req.body.newPassword;
+        if (!validator.isLength(newPassword, { min: 8 })) {
             return res.status(400).json({
                 success: false,
                 message: "Password must be at least 8 characters long."
@@ -290,7 +299,7 @@ const updateUserById = asyncHandler(async(req, res) => {
 
         // Encrypt the password
         const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
+        user.password = await bcrypt.hash(newPassword, salt);
     }
 
     // Save the updated user data
@@ -343,8 +352,26 @@ const deleteUserById = asyncHandler(async (req, res) => {
     });
 });
 
+//get a list of every user
+const getAllUsers = asyncHandler(async (req,res) =>{
+    const {page,pageSize} = req.query;
+    if(!mongoose.isValidObjectId(req.user._id) && !req.user.isAdmin){
+        return res.status(403).json({
+            success:false,
+            message:"You are not authorized to do this"
+        })
+    }
+    const count = await User.countDocuments();//total users
+    const allUsers = await User.find({})
+                                .skip(pageSize * (page-1))
+                                .limit(pageSize);
 
-
+    return res.status(200).json({
+        success:true,
+        data:allUsers,
+        pages:Math.ceil(count/pageSize)
+    })
+})
 
 
 
@@ -361,7 +388,8 @@ export {
      updateUserProfile,
      getUserById,
      updateUserById,
-     deleteUserById
+     deleteUserById,
+     getAllUsers
     }
 
 

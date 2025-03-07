@@ -2,6 +2,7 @@ import express from "express";
 import {
     createUser,
     deleteUserById,
+    getAllUsers,
     getUserById,
     getUserProfile,
     loginUser,
@@ -28,13 +29,14 @@ router.post('/logout', logoutUser)
 router.route('/profile')
     .get(authenticate, getUserProfile)
     .put(authenticate, updateUserProfile)
-
+    
+//get a list of all users
+router.get('/all',authenticate, authorizedAdmin, getAllUsers)
 //authenticate & authorized admin routes
 router.route('/:id')
     .get(authenticate, authorizedAdmin, getUserById)
-    .put(authenticate, authorizedAdmin, updateUserById)
+    .put(authenticate, updateUserById)
     .delete(authenticate, authorizedAdmin, deleteUserById)
-
 
 
 export default router;
