@@ -7,6 +7,7 @@ import {
     getUserProfile,
     loginUser,
     logoutUser,
+    updateAddress,
     updateUserById,
     updateUserProfile
 }
@@ -32,6 +33,8 @@ router.route('/profile')
     
 //get a list of all users
 router.get('/all',authenticate, authorizedAdmin, getAllUsers)
+
+router.put('/:id/address', authenticate, updateAddress);
 //authenticate & authorized admin routes
 router.route('/:id')
     .get(authenticate, authorizedAdmin, getUserById)

@@ -69,6 +69,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: (result, error, userId) => [{ type: 'Users', id: userId }, 'Users'],
         }),
+        updateAddress: builder.mutation({
+            query:(data)=>({
+                url:`${USER_URL}/${data._id}/address`,
+                method:"PUT",
+                body:data
+            }),
+        })
         
     })
 });
@@ -80,5 +87,6 @@ export const {
     useLogoutMutation,
     useGetUsersQuery,
     useBanUserMutation,
-    useChangePasswordMutation
+    useChangePasswordMutation,
+    useUpdateAddressMutation
 } = userApiSlice;

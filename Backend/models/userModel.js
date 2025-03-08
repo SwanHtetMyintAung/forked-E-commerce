@@ -22,7 +22,17 @@ const userSchema = mongoose.Schema({
         type : Boolean,
         required : true,
         default : false
-    }
+    },
+    address:{
+            fullName: { type: String },
+            phone: { type: String},
+            street: { type: String },
+            city: { type: String },
+            state: { type: String },
+            zipCode: { type: String },
+            country: { type: String }
+    },
+
 }, {timestamps : true});
 
 const User = mongoose.model("User", userSchema);

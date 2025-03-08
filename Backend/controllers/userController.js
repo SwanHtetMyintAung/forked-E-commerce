@@ -61,7 +61,6 @@ const createUser = asyncHandler(async (req, res) => {
 
         // Create and send a token to the frontend for the registered user
         const token = createToken(res, newUser._id);
-
         return res.status(201).json({
             success: true,
             message: "User successfully created.",
@@ -69,6 +68,7 @@ const createUser = asyncHandler(async (req, res) => {
             token : token
         });
     } catch (error) {
+        console.log(error)
         // Handle database or server errors
         return res.status(500).json({
             success: false,
@@ -373,6 +373,74 @@ const getAllUsers = asyncHandler(async (req,res) =>{
     })
 })
 
+const updateAddress = asyncHandler(async (req, res) => {
+        // Check for missing user ID
+        if (!req.body._id) {
+            return res.status(400).json({ success: false, message: "User ID is required." });
+        }
+
+        // Fetch user from DB
+        const userFromDb = await User.findById(req.params.id);//for some reasons req.body._id didn't work!!
+
+        // Edge case: User not found
+        if (!userFromDb) {
+            return res.status(400).json({
+                success: false,
+                message: "Couldn't find the user!"
+            });
+        }
+
+        // Extract and validate address object
+        const address = req.body.address;
+        if (!address) {
+            return res.status(400).json({ error: "Address is required." });
+        }
+
+        const { fullName, phone, street, city, state, zipCode, country } = address;
+
+        // Validate required fields
+        if (!fullName || !phone || !street || !city || !state || !zipCode || !country) {
+            return res.status(400).json({ error: "All address fields are required." });
+        }
+
+        // Validate phone number (10-15 digits)
+        const phoneRegex = /^\+?[0-9]{10,15}$/;
+        if (!phoneRegex.test(phone)) {
+            return res.status(400).json({ error: "Invalid phone number format." });
+        }
+
+        // Validate Zip Code (5-10 alphanumeric characters)
+        const zipRegex = /^[A-Za-z0-9]{5,10}$/;
+        if (!zipRegex.test(zipCode)) {
+            return res.status(400).json({ error: "Invalid zip code format." });
+        }
+
+        // Validate country (only alphabets & spaces)
+        const countryRegex = /^[A-Za-z\s]{2,}$/;
+        if (!countryRegex.test(country)) {
+            return res.status(400).json({ error: "Invalid country name." });
+        }
+
+        // Update the user's address
+        userFromDb.address = { fullName, phone, street, city, state, zipCode, country };
+
+        // Save to DB
+        await userFromDb.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Successfully saved address.",
+            data: userFromDb
+        });
+
+
+        // console.log(error.message);
+        // return res.status(500).json({
+        //     success: false,
+        //     message: "Couldn't fulfill the request for updating address."
+        // });
+    
+});
 
 
 
@@ -389,7 +457,8 @@ export {
      getUserById,
      updateUserById,
      deleteUserById,
-     getAllUsers
+     getAllUsers,
+     updateAddress
     }
 
 
