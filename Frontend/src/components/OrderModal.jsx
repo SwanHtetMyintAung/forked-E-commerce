@@ -5,25 +5,25 @@ import { Modal, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useAddToCartMutation } from "../redux/api/cartApiSlice.js";
 
-const OrderModal = ({ name, price, image, productId, show, setShowModal }) => {
-    const [quantity, setQuantity] = useState(1);
+const OrderModal = ({ name, price, image, productId, show, quantity ,setShowModal }) => {
+    const [demand, setDemand] = useState(quantity > 0 ? 1 : 0);
     const [addToCart, { isLoading }] = useAddToCartMutation();
 
     // Increase quantity
-    const increaseQuantity = () => setQuantity((prev) => prev + 1);
+    const increaseQuantity = () => setDemand((prev) => prev + 1);
 
     // Decrease quantity (Minimum is 1)
-    const decreaseQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : prev));
+    const decreaseQuantity = () => setDemand((prev) => (prev > 1 ? prev - 1 : prev));
 
     // Calculate total price
-    const totalPrice = (price * quantity).toFixed(2);
+    const totalPrice = (price * demand).toFixed(2);
 
     // Handle Add to Cart
     const handleAddToCart = async () => {
         try {
-            console.log("📢 Sending Add to Cart request:", { productId, quantity });
+            console.log("📢 Sending Add to Cart request:", { productId, demand });
     
-            const response = await addToCart({ productId, quantity }).unwrap();
+            const response = await addToCart({ productId, quantity:demand }).unwrap();
             console.log("✅ Add to Cart Success:", response);
     
             toast.success(`${name} added to cart! 🛒`);
@@ -34,7 +34,13 @@ const OrderModal = ({ name, price, image, productId, show, setShowModal }) => {
         }
     };
     
-
+    const handleIncreaseDemand = () =>{
+        if(demand < quantity){//make sure the demand is not higher than the stock
+            increaseQuantity();
+        }else{
+            return;
+        }
+    }
     return (
         <Modal show={show} onHide={() => setShowModal(false)} centered>
             <Modal.Header closeButton>
@@ -49,9 +55,9 @@ const OrderModal = ({ name, price, image, productId, show, setShowModal }) => {
 
                 {/* Quantity Control */}
                 <div className="d-flex justify-content-center align-items-center mt-3">
-                    <Button variant="secondary" onClick={decreaseQuantity} disabled={quantity <= 1}>-</Button>
-                    <span className="mx-3">{quantity}</span>
-                    <Button variant="secondary" onClick={increaseQuantity}>+</Button>
+                    <Button variant="secondary" onClick={decreaseQuantity} disabled={demand <= 1}>-</Button>
+                    <span style={{userSelect:"none"}} className="mx-3">{demand}</span>
+                    <Button variant="secondary" onClick={handleIncreaseDemand} disabled={demand == quantity}>+</Button>
                 </div>
 
                 {/* Total Price */}

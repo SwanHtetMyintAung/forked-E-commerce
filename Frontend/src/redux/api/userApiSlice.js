@@ -75,6 +75,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method:"PUT",
                 body:data
             }),
+        }),
+        checkHistory: builder.query({
+            query:(userId)=>({
+                url:`${USER_URL}/${userId}/history`,
+                method:"GET"
+            }),
+            transformResponse: (response) =>{
+                return response.data.map(item=>{
+                    return item.product
+                })
+            }            
         })
         
     })
@@ -88,5 +99,6 @@ export const {
     useGetUsersQuery,
     useBanUserMutation,
     useChangePasswordMutation,
-    useUpdateAddressMutation
+    useUpdateAddressMutation,
+    useCheckHistoryQuery
 } = userApiSlice;

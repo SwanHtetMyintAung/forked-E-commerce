@@ -63,6 +63,7 @@ const ProductCard = ({ _id, name, image, brand, category, description, price, qu
                     image={imageUrl}
                     show={showOrderModal}
                     productId={_id}
+                    quantity={quantity}
                     setShowModal={setShowOrderModal}/>
                     
 

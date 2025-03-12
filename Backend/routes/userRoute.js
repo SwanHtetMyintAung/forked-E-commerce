@@ -9,12 +9,13 @@ import {
     logoutUser,
     updateAddress,
     updateUserById,
-    updateUserProfile
+    updateUserProfile,
+    checkHistory
 }
     from "../controllers/userController.js";
 
 //middleware fucntion import
-import { authenticate, authorizedAdmin } from '../middlewares/authMiddleware.js'
+import { authenticate, authorizedAdmin, authorizedUser } from '../middlewares/authMiddleware.js'
 
 //init the express.js for routes
 const router = express.Router();
@@ -40,6 +41,7 @@ router.route('/:id')
     .get(authenticate, authorizedAdmin, getUserById)
     .put(authenticate, updateUserById)
     .delete(authenticate, authorizedAdmin, deleteUserById)
-
+//purchase history
+router.get("/:id/history",authenticate, checkHistory)
 
 export default router;

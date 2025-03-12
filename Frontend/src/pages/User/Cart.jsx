@@ -9,15 +9,16 @@ import {
   useUpdateCartItemMutation,
   useRemoveCartItemMutation,
   useClearCartMutation,
+  useOrderCartMutation
 } from "../../redux/api/cartApiSlice.js";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { data: cart, isLoading, error, refetch } = useGetCartQuery();
+  const [orderCart,{orderIsLoading,orderError}] = useOrderCartMutation();
   const [updateCartItem] = useUpdateCartItemMutation();
   const [removeCartItem] = useRemoveCartItemMutation();
   const [clearCart] = useClearCartMutation();
-  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -55,13 +56,14 @@ const Cart = () => {
   };
 
   // Checkout (Simulated)
-  const handleCheckout = () => {
-    setIsCheckoutLoading(true);
-    setTimeout(() => {
-      setIsCheckoutLoading(false);
-      toast.success("Order placed successfully!");
-      handleClearCart();
-    }, 2000);
+  const handleCheckout = async() => {
+    try{
+      await orderCart().unwrap();
+      toast.success("Your cart has been processed!")
+      refetch();
+    }catch(err){
+      toast.error(err?.message || err?.data?.message)
+    }
   };
 
   return (
@@ -131,8 +133,8 @@ const Cart = () => {
               <Button variant="outline-danger" onClick={handleClearCart}>
                 Clear Cart
               </Button>
-              <Button variant="success" onClick={handleCheckout} disabled={isCheckoutLoading}>
-                {isCheckoutLoading ? "Processing..." : "Order Now"}
+              <Button variant="success" onClick={handleCheckout} disabled={orderIsLoading}>
+                {orderIsLoading ? "Processing..." : "Order Now"}
               </Button>
             </div>
           </Card>

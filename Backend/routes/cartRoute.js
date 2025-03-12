@@ -5,6 +5,7 @@ import {
     updateCartItem,
     removeCartItem,
     clearCart,
+    orderCart
 } from "../controllers/cartController.js";
 import { authenticate, authorizedUser } from "../middlewares/authMiddleware.js";
 
@@ -14,7 +15,7 @@ router.route("/")
     .get(authenticate, authorizedUser, getUserCart)  // Get user cart
     .post(authenticate, authorizedUser, addToCart)  // Add to cart
     .delete(authenticate, authorizedUser, clearCart);  // Clear cart
-
+router.post("/order",authenticate,authorizedUser,orderCart);
 router.route("/:itemId")
     .put(authenticate, authorizedUser, updateCartItem)  // Update cart item
     .delete(authenticate, authorizedUser, removeCartItem);  // Remove cart item

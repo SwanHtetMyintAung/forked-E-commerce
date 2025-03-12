@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Card, Col, Container, Row, Spinner, Pagination, Button } from "react-bootstrap";
+import { Card, Col, Container, Row, Spinner, Button } from "react-bootstrap";
 import { useFetchProductsQuery } from "../redux/api/productApiSlice.js";
 import ProductSearchBar from "../components/ProductSearchBar.jsx";
-import ProductDetailModal from "../components/ProductDetailModal.jsx";
 import ProductCard from "../components/ProductCard.jsx";
-
+import Pagination from "../components/Pagination.jsx";
 
 export default function Products() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -13,7 +11,9 @@ export default function Products() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const pageSize = 4;
-
+  const handlePageChange = (targetPage) =>{
+    setCurrentPage(targetPage)
+  }
   const { data: response, isLoading, error, refetch } = useFetchProductsQuery({
     page: searchTerm ? 1 : currentPage, // Reset to first page on search
     pageSize,
@@ -65,17 +65,7 @@ export default function Products() {
       {/* Pagination (Only if not searching) */}
       {/* Hide pagination when no products are found */}
       {products.length > 0 && pages > 1 && !searchTerm && (
-        <Pagination className="justify-content-center mt-5">
-          {[...Array(pages)].map((_, index) => (
-            <Pagination.Item
-              key={index}
-              active={index + 1 === currentPage}
-              onClick={() => setCurrentPage(index + 1)}
-            >
-              {index + 1}
-            </Pagination.Item>
-          ))}
-        </Pagination>
+        <Pagination currentPage={currentPage} totalPages={pages} onPageChange={handlePageChange}/>
       )}
     </>
   );

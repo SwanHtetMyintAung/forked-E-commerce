@@ -24,7 +24,6 @@ const ProductSearchBar = ({ setSelectedCategory, setSearchTerm }) => {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const jsonData = await response.json();
-        console.log("Fetched Category Data:", jsonData);
 
         if (jsonData?.data && Array.isArray(jsonData.data)) {
           setCategoryData(jsonData.data.map((item) => item.name));

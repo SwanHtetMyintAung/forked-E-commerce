@@ -2,7 +2,7 @@ import React from 'react';
 
 function Pagination({ currentPage, totalPages, onPageChange }) {
   const pageNumbers = [];
-  const maxVisiblePages = 5;
+  const maxVisiblePages = 3;
 
   if (totalPages <= maxVisiblePages) {
     for (let i = 1; i <= totalPages; i++) {
@@ -37,7 +37,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
   }
 
   return (
-    <nav aria-label="Page navigation">
+    <nav className='mt-4' aria-label="Page navigation">
       <ul className="pagination justify-content-center">
         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
           <button className="page-link" onClick={() => onPageChange(currentPage - 1)}>

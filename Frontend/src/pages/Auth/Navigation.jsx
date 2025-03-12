@@ -13,7 +13,7 @@ import {
 
 function Navigation() {
   const [show, setShow] = useState(false);
-  const { userInfo } = useSelector((state) => state.auth);
+  const { userInfo } = useSelector((state) => state.auth) ;
   const isAdmin = userInfo?.data?.isAdmin;
   const { data: cart, isLoading, error, refetch } = useGetCartQuery();
 

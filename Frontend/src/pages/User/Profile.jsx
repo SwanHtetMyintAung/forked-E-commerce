@@ -10,11 +10,13 @@ import {toast} from "react-toastify"
 //modals
 import ChangePasswordModal from '../../components/ChangePasswordModal';
 import ChangeAddressModal from '../../components/ChangeAddressModal.jsx';
-
+import CheckPurchaseHistoryModal from '../../components/CheckPurChaseHistoryModal.jsx';
 const btnStyle = {
     width:"80%",
-    marginLeft: "30px",
+    maxWidth:"200px",
+    margin: "0 auto",
     border:"none",
+    height:"2rem",
 }
 
 function Profile(){
@@ -22,8 +24,7 @@ function Profile(){
     const [changePassword,{passwordError}] = useChangePasswordMutation();
     const [updateAddress,{addressError}] = useUpdateAddressMutation();
     const {userInfo} = useSelector((state)=>state.auth);
-    const {name,email,isAdmin,address} = userInfo?.data || null;
-
+    const {_id:id,name,email,isAdmin,address} = userInfo?.data || null;
     //passwordModal
     const [showPasswordChangeModal,setShowPasswordChangeModal] = useState(false);
     const imageUrl=""
@@ -66,6 +67,11 @@ function Profile(){
         }
 
     }
+    //purchase history
+    const [showHistoryModal,setShowHistoryModal] = useState(false);
+    function toggleShowHistoryModal(){
+        setShowHistoryModal(prev=>!prev);
+    }
     return(
         <Container className="mx-auto text-light mt-5">
             <Row className="justify-content-center">
@@ -80,15 +86,15 @@ function Profile(){
                     <h1 className="mt-3">Name: {name ? name : "John Doe"}</h1>
                     <p className="text-light">Email: {email}</p>
                 </Col>
-                <Col xs={6} md={6} lg={4}>
+                <Col xs={6} md={6} lg={3}>
                     <fieldset className='border m-8 p-8 d-flex flex-column justify-content-around' style={{height:"300px"}}>
                     <legend className='d-block'>
                         <FontAwesomeIcon className='mx-2' icon={faCog}/>
                         Setting
                     </legend>
-                            <button style={btnStyle} onClick={togglePasswordModal}>Change Password</button>
-                            <button style={btnStyle}>Check History</button>
-                            <button style={btnStyle} onClick={toggleAddressModal}>Change Address</button>
+                            <button className='rounded' style={btnStyle} onClick={togglePasswordModal}>Change Password</button>
+                            <button className='rounded' style={btnStyle} onClick={toggleShowHistoryModal}>Check History</button>
+                            <button className='rounded' style={btnStyle} onClick={toggleAddressModal}>Change Address</button>
                     </fieldset>
                 
                 </Col>
@@ -97,6 +103,7 @@ function Profile(){
             </Row>
         <ChangePasswordModal show={showPasswordChangeModal} onHide={togglePasswordModal} onConfirm={handleChangePassword} />
         <ChangeAddressModal show={showAddressChangeModal} onHide={toggleAddressModal} onConfirm={handleChangeAddress} existingAddress={address}/>
+        <CheckPurchaseHistoryModal show={showHistoryModal} onHide={toggleShowHistoryModal} userId={id}/>
         </Container>
     )
 }

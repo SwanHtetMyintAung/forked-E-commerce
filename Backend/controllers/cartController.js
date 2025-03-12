@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import Cart from "../models/cartModel.js";
 import Product from "../models/productModel.js";
+import User from "../models/userModel.js";
 
 // @desc   Get user cart
 // @route  GET /api/cart
@@ -118,5 +119,54 @@ const clearCart = asyncHandler(async (req, res) => {
     await Cart.findOneAndDelete({ user: req.user._id });
     res.status(200).json({ message: "Cart cleared successfully" });
 });
+// handle the checkout of the cart
+// POST /api/cart/order
+const orderCart = asyncHandler(async (req,res)=>{
+    let customMessage = "";
+    const cart = await Cart.findOne({ user: req.user._id});
+    if(!cart){
+        return res.status(501).json({
+            success:true,
+            message:"Couldn't find the cart!"
+        })
+    }
 
-export { getUserCart, addToCart, updateCartItem, removeCartItem, clearCart };
+    //cart exists
+    //actual delivery shenenigans here
+
+
+    //to show the user purchase history
+    const userFromDb = await User.findOne({ _id: req.user._id });
+    if(!userFromDb){
+        return res.status(400).json({
+            success:true,
+            message:"Couldn't find the user. Make sure you have the right credentials!"
+        })
+    }
+
+    for (const cartItem of cart.cartItems) {
+        const product = await Product.findOne({ _id: cartItem.product });
+        console.log(cartItem)
+        if (!product) {
+            customMessage = "Product not found!";
+            continue; // Skip this iteration if the product is missing
+        }
+    
+        if (product.quantity >= cartItem.quantity) {
+            product.quantity -= cartItem.quantity; // Reduce available stock
+            await product.save(); // Save changes to the database
+            userFromDb.purchaseHistory.push(cartItem);
+        } else {
+            customMessage = "We don't have the items in stock yet";
+        }
+    }
+    
+    await userFromDb.save();
+    await Cart.findOneAndDelete({ user: req.user._id });//delete the cart since it's done
+    res.status(200).json({
+        success:true,
+        message:customMessage || "Order Success."
+    })
+
+})
+export { getUserCart, addToCart, updateCartItem, removeCartItem, clearCart,orderCart };
