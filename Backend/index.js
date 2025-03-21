@@ -38,7 +38,7 @@ app.use(cors({
       }else{
         callback(new Error("Not Allowed By CORS"));
       }
-  }
+  },
   credentials: true, // Allow cookies, authentication headers // Allow cookies from frontend
 }));
 app.use(express.json());
