@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit, faEye } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
-import { useFetchOrdersQuery, useUpdateOrderStatusMutation, useDeleteOrderByIdMutation } from "../../../redux/api/orderApislice.js";
+import { useFetchOrdersQuery, useUpdateOrderStatusMutation, useDeleteOrderByIdMutation } from "../../../redux/api/orderApiSlice.js";
 import Model from "../../../components/Model.jsx";
 
 const ManageOrders = () => {
