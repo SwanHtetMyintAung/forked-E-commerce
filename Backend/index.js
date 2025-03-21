@@ -28,11 +28,17 @@ connectDB();
 
 // Initialize Express App
 const app = express();
-
+const allowedOrigins = ["http://localhost:5173","https://e-commerce-al51.onrender.com"];
 // Middlewares
 app.use(cors({
  // Configure CORS
-  origin: "http://localhost:5173", // Allow requests from frontend
+  origin: (origin, callback) => {
+      if(allowedOrigins.indexOf(origin) != -1 || !origin){
+         callback(null,true)
+      }else{
+        callback(new Error("Not Allowed By CORS"));
+      }
+  }
   credentials: true, // Allow cookies, authentication headers // Allow cookies from frontend
 }));
 app.use(express.json());
