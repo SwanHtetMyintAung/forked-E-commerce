@@ -468,7 +468,30 @@ const checkHistory = asyncHandler(async (req,res)=>{
         data:userFromDb.purchaseHistory
     })
 })
+const clearHistory = asyncHandler(async(req,res)=>{
+     // Check for missing user ID
+     if (!req.body._id && (req.body._id == req.params.id)) {
+        return res.status(400).json({ success: false, message: "User ID is required." });
+    }
+     // Fetch user from DB
+     const userFromDb = await User.findById(req.params.id);
 
+     if (!userFromDb) {
+        return res.status(400).json({
+            success: false,
+            message: "Couldn't find the user!"
+        });
+    }
+    //clear the whole thing
+    userFromDb.purchaseHistory = [];
+    await userFromDb.save();
+
+    res.status(200).json({
+        success:true,
+        message:"History Cleared."
+    })
+
+})
 
 
 
@@ -483,7 +506,8 @@ export {
      deleteUserById,
      getAllUsers,
      updateAddress,
-     checkHistory
+     checkHistory,
+     clearHistory
     }
 
 

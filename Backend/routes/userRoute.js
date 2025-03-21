@@ -10,7 +10,8 @@ import {
     updateAddress,
     updateUserById,
     updateUserProfile,
-    checkHistory
+    checkHistory,
+    clearHistory
 }
     from "../controllers/userController.js";
 
@@ -42,6 +43,8 @@ router.route('/:id')
     .put(authenticate, updateUserById)
     .delete(authenticate, authorizedAdmin, deleteUserById)
 //purchase history
-router.get("/:id/history",authenticate, checkHistory)
+router.route("/:id/history")
+    .get(authenticate,checkHistory)
+    .delete(authenticate,clearHistory)
 
 export default router;

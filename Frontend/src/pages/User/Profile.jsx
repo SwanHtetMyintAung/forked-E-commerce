@@ -10,7 +10,7 @@ import {toast} from "react-toastify"
 //modals
 import ChangePasswordModal from '../../components/ChangePasswordModal';
 import ChangeAddressModal from '../../components/ChangeAddressModal.jsx';
-import CheckPurchaseHistoryModal from '../../components/CheckPurChaseHistoryModal.jsx';
+import CheckPurchaseHistoryModal from '../../components/CheckPurchaseHistoryModal.jsx';
 const btnStyle = {
     width:"80%",
     maxWidth:"200px",

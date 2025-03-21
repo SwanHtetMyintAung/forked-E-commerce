@@ -83,9 +83,16 @@ export const userApiSlice = apiSlice.injectEndpoints({
             }),
             transformResponse: (response) =>{
                 return response.data.map(item=>{
-                    return item.product
+                    return item
                 })
             }            
+        }),
+        clearHistory: builder.mutation({
+            query:(userId)=>({
+                url:`${USER_URL}/${userId}/history`,
+                method:"DELETE"
+            }),
+            invalidatesTags: (result, error, userId) => [{ type: 'Users', id: userId }, 'Users'],
         })
         
     })
@@ -100,5 +107,6 @@ export const {
     useBanUserMutation,
     useChangePasswordMutation,
     useUpdateAddressMutation,
-    useCheckHistoryQuery
+    useCheckHistoryQuery,
+    useClearHistoryMutation
 } = userApiSlice;

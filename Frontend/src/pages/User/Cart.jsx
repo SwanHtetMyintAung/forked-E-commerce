@@ -61,6 +61,8 @@ const Cart = () => {
       await orderCart().unwrap();
       toast.success("Your cart has been processed!")
       refetch();
+      window.location.reload();
+
     }catch(err){
       toast.error(err?.message || err?.data?.message)
     }

@@ -1,10 +1,20 @@
-import { useState } from "react";
+import react from "react";
 import { Button, Modal,Table } from "react-bootstrap";
-import { useCheckHistoryQuery } from "../redux/api/userApiSlice";
+import { useCheckHistoryQuery, useClearHistoryMutation } from "../redux/api/userApiSlice";
+import { toast } from "react-toastify";
 
 function CheckPurchaseHistoryModal({show,onHide,userId}){
-    const { data, isLoading, error } = useCheckHistoryQuery(userId);
-
+    const { data, isLoading, error, refetch } = useCheckHistoryQuery(userId);
+    const [clearHistory] = useClearHistoryMutation();
+    const handleClearHistory = async () =>{
+        try{
+            await clearHistory(userId).unwrap();
+            refetch();
+            toast.success("Cleared History");
+        }catch(err){
+            toast.error(err || err?.message || "operation failed.")
+        }
+    }
     return(
         <Modal show={show} onHide={onHide}>
             <Modal.Header>
@@ -37,19 +47,28 @@ function CheckPurchaseHistoryModal({show,onHide,userId}){
                                 <td colSpan="5" className="text-center">You haven't purchased anything yet.</td>
                             </tr>
                         }
-                        {data?.map((item,index) =>(
-                            <tr key={index}>
-                                <td>{index}</td>
-                                <td>{item.name}</td>
-                                <td>{item.quantity}</td>
-                                <td>{item.price}$</td>
-                                <td>{item.price * item.quantity}$</td>
-                            </tr>
-                        ))}
+                        {data?.map((result,index) => {
+                            let {_id, name:productName, price} = result.product;
+                            
+                            return(
+                                <react.Fragment key={result.id}>
+                                <tr key={index}>
+                                    <td>{index+1}</td>
+                                    <td>{productName}</td>
+                                    <td>{result.quantity}</td>
+                                    <td>{price}$</td>
+                                    <td>{(price * result.quantity).toFixed(2)}$</td>
+                                </tr>
+                                </react.Fragment>
+                        )})}
+
+
+                        
                     </tbody>
                 </Table>
             </Modal.Body>
             <Modal.Footer>
+                <Button variant="warning" onClick={handleClearHistory}>Clear</Button>
                 <Button variant="danger" onClick={onHide}>Close</Button>
             </Modal.Footer>
         </Modal>
