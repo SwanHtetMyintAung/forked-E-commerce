@@ -25,6 +25,8 @@ router.get('/total', countTotalOrders);
 router.get('/sales', totalSales);
 //count total sales by date
 router.get('/salesByDate', totalSalesByDate);
+//get all orders
+router.get('/all',authenticate, authorizedAdmin, getAllOrders);
 //get order by ID
 router.get('/:id', findOrderById);
 
@@ -40,8 +42,6 @@ router.put('/:id/paid', authenticate,  markOrderAsPaid);
 //Both Authenticate and Authorized Admin Routes
 //create order
 router.post('/create', authenticate, authorizedAdmin, createOrder);
-//get all orders
-router.get('/all',authenticate, authorizedAdmin, getAllOrders);
 //mark order as delivered
 router.put('/:id/delivered', authenticate, authorizedAdmin, markOrderAsDelivered);
       

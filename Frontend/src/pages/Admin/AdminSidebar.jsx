@@ -8,6 +8,7 @@ import {
   faKey 
 } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
+import Model from '../../components/Model.jsx';
 import { Link } from "react-router-dom";
 import {
   FaHome,
@@ -30,6 +31,9 @@ import {
 import "../../../public/css/AdminDashboard.css";
 
 function AdminSidebar({ sidebarOpen, setSidebarOpen, darkMode, setDarkMode }) {
+  const [show,setShow] = useState(false);
+
+  const handleToggleShow = () => setShow(prev => !prev)
   // State for dropdown toggle
   const [dropdownOpen, setDropdownOpen] = useState({
     dashboard: false,
@@ -84,7 +88,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, darkMode, setDarkMode }) {
               </Nav.Link>
               {dropdownOpen.users && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="dropdown-content">
-                  <Nav.Link as={Link} to="/admin/users/list"> <FaCog className="me-2" />Manage Users </Nav.Link>
+                  <Nav.Link as={Link} to="/admin/users/manage"> <FaCog className="me-2" />Manage Users </Nav.Link>
                   <Nav.Link as={Link} to="/admin/users/roles"><FaKey className="me-2" />Roles & Permissions</Nav.Link>
                 </motion.div>
               )}
@@ -126,24 +130,10 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, darkMode, setDarkMode }) {
               </Nav.Link>
               {dropdownOpen.orders && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="dropdown-content">
-                  <Nav.Link as={Link} to="/admin/analytics/revenue"><FaCog className="me-2" />Manage Orders</Nav.Link>
+                  <Nav.Link as={Link} to="/admin/orders/manage"><FaCog className="me-2" />Manage Orders</Nav.Link>
                 </motion.div>
               )}
             </Nav.Item>
-
-             {/* Contact Dropdown */}
-             <Nav.Item>
-              <Nav.Link onClick={() => toggleDropdown("contacts")} className="sidebar-link">
-                <FaAddressCard className="me-2" /> Contact
-                {dropdownOpen.contacts ? <FaChevronDown /> : <FaChevronRight />}
-              </Nav.Link>
-              {dropdownOpen.contacts && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="dropdown-content">
-                  <Nav.Link as={Link} to="/admin/analytics/revenue"><FaCog className="me-2" />Manage Contacts</Nav.Link>
-                </motion.div>
-              )}
-            </Nav.Item>
-
             {/* Settings Dropdown */}
             <Nav.Item>
               <Nav.Link onClick={() => toggleDropdown("settings")} className="sidebar-link">
@@ -152,16 +142,14 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, darkMode, setDarkMode }) {
               </Nav.Link>
               {dropdownOpen.settings && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="dropdown-content">
-                  <Nav.Link as={Link} to="/admin/settings/general">  <FontAwesomeIcon icon={faUser} className="me-2" /> My Profile</Nav.Link>
-                  <Nav.Link as={Link} to="/admin/settings/security">  <FontAwesomeIcon icon={faUserEdit} className="me-2" /> Update Profile</Nav.Link>
-                  <Nav.Link as={Link} to="/admin/settings/general">   <FontAwesomeIcon icon={faKey} className="me-2" /> Change Password</Nav.Link>
-                  <Nav.Link as={Link} to="/admin/settings/general">   <FontAwesomeIcon icon={faSignOutAlt} className="me-2" /> Logout</Nav.Link>
+                  <Nav.Link as={Link} to="/admin/profile">  <FontAwesomeIcon icon={faUser} className="me-2" /> My Profile</Nav.Link>
+                  <Nav.Link as={Link} onClick={handleToggleShow}>   <FontAwesomeIcon icon={faSignOutAlt} className="me-2" /> Logout</Nav.Link>
                 </motion.div>
               )}
             </Nav.Item>
 
           </Nav>
-
+          <Model  handleClose={handleToggleShow} show={show}/>
           {/* Dark Mode Toggle */}
           <Button variant={darkMode ? "light" : "dark"} className="mt-3" onClick={() => setDarkMode(!darkMode)}>
             {darkMode ? <FaSun /> : <FaMoon />} {darkMode ? "Light Mode" : "Dark Mode"}

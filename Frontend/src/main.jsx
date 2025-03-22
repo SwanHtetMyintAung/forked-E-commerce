@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import store from './redux/store.js';
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Navigate  } from 'react-router-dom';
 
 //Public Routes import
 //auth
@@ -28,6 +28,8 @@ import ManageCategory from './pages/Admin/Category/ManageCategory.jsx';
 import CreateCategory from './pages/Admin/Category/CreateCategory.jsx';
 import ManageProduct from './pages/Admin/Product/ManageProduct.jsx';
 import ManageUser from './pages/Admin/User/ManageUser.jsx';
+import ManageRoles from './pages/Admin/User/ManageRoles.jsx';
+import ManageOrders from './pages/Admin/Order/ManageOrders.jsx';
 //This is routes for frontend ui 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -45,12 +47,16 @@ const router = createBrowserRouter(
 
       {/* Admin Routes */}
       <Route path='/admin/' element={<AdminRoutes />}>
+        <Route index={true} element={<Navigate to="/admin/dashboard" replace />}/>
         <Route path='dashboard' element={<AdminDashboard />} />
         <Route path='category/add' element={<CreateCategory />} />
         <Route path='categories/manage' element={<ManageCategory />} />
         <Route path='product/add' element={<CreateProduct />} />
         <Route path='products/manage' element={<ManageProduct />} />
         <Route path='users/manage' element={<ManageUser/>}/>
+        <Route path='users/roles' element={<ManageRoles/>}/>
+        <Route path="orders/manage" element={<ManageOrders/>}/>
+        <Route path="profile" element={<Profile/>}/>
       </Route>
 
       {/* User Routes */}

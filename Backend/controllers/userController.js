@@ -493,6 +493,50 @@ const clearHistory = asyncHandler(async(req,res)=>{
 
 })
 
+// updateUserRole (backend endpoint: /api/users/:userId/role)
+const updateUserRole = asyncHandler(async (req, res) => {
+    const userId = req.params.id;
+    const { isAdmin } = req.body;
+    console.log(userId)
+    // Validate the ID format
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid user ID.",
+        });
+    }
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found.",
+        });
+    }
+
+    // Prevent demoting the last admin
+    if (user.isAdmin && !isAdmin) {
+        const adminCount = await User.countDocuments({ isAdmin: true });
+        if (adminCount <= 1) {
+            return res.status(400).json({
+                success: false,
+                message: "Cannot demote the last admin.",
+            });
+        }
+    }
+
+    // Update the user's role
+    user.isAdmin = isAdmin;
+    const updatedUser = await user.save();
+
+    return res.status(200).json({
+        success: true,
+        message: "User role successfully updated.",
+        data: updatedUser,
+    });
+});
 
 
 export {
@@ -507,7 +551,8 @@ export {
      getAllUsers,
      updateAddress,
      checkHistory,
-     clearHistory
+     clearHistory,
+     updateUserRole
     }
 
 

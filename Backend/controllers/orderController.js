@@ -122,6 +122,7 @@ const createOrder = asyncHandler(async (req, res) => {
 
 //get all order by each user
 const getAllOrders = asyncHandler(async (req, res) => {
+    console.log("reached")
     try {
         // Extract query parameters for pagination and filtering
         const page = parseInt(req.query.page) || 1;

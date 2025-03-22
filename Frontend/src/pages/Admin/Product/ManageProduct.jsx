@@ -13,7 +13,7 @@ import {
 import {
     useFetchAllCategoriesQuery,
 } from "../../../redux/api/categoryApiSlice.js";
-
+import { BASE_URL } from "../../../redux/constants.js";
 const ManageProductsPage = () => {
     const [page, setPage] = useState(1);
     const pageSize = 5; // Number of products per page
@@ -183,7 +183,7 @@ const ManageProductsPage = () => {
                                             <td>{index + 1 + (page - 1) * pageSize}</td>
                                             <td>
                                                 <img
-                                                    src={product.image?.startsWith("http") ? product.image : `http://localhost:5000${product.image}`}
+                                                    src={product.image?.startsWith("http") ? image:`${BASE_URL}${product.image}`}
                                                     alt={product.name}
                                                     className="img-thumbnail"
                                                     style={{ width: "60px", height: "60px", objectFit: "cover" }}

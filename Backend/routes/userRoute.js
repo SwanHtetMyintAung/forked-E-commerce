@@ -11,7 +11,8 @@ import {
     updateUserById,
     updateUserProfile,
     checkHistory,
-    clearHistory
+    clearHistory,
+    updateUserRole
 }
     from "../controllers/userController.js";
 
@@ -37,6 +38,7 @@ router.route('/profile')
 router.get('/all',authenticate, authorizedAdmin, getAllUsers)
 
 router.put('/:id/address', authenticate, updateAddress);
+router.put("/change-role/:id",authenticate,authorizedAdmin,updateUserRole)
 //authenticate & authorized admin routes
 router.route('/:id')
     .get(authenticate, authorizedAdmin, getUserById)
@@ -46,5 +48,4 @@ router.route('/:id')
 router.route("/:id/history")
     .get(authenticate,checkHistory)
     .delete(authenticate,clearHistory)
-
 export default router;

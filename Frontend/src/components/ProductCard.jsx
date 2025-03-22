@@ -4,9 +4,9 @@ import Card from 'react-bootstrap/Card';
 import ProductDetailModal from './ProductDetailModal.jsx';
 import OrderModal from './OrderModal.jsx';
 import { useSelector } from 'react-redux';
-
+import { BASE_URL } from '../redux/constants.js';
 const ProductCard = ({ _id, name, image, brand, category, description, price, quantity }) => {
-  const imageUrl = image?.startsWith("http") ? image : `http://localhost:5000${image}`;
+  const imageUrl = `${BASE_URL}${image}`;
   const [showModal, setShowModal] = useState(false);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);

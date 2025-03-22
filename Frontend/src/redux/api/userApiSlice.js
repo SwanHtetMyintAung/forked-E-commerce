@@ -93,6 +93,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method:"DELETE"
             }),
             invalidatesTags: (result, error, userId) => [{ type: 'Users', id: userId }, 'Users'],
+        }),
+        updateUserRole: builder.mutation({
+            query: (user) => { // Destructure _id and isAdmin
+                return ({
+                    url: `${USER_URL}/change-role/${user._id}`, // Use the destructured _id
+                    method: "PUT",
+                    body: {
+                        isAdmin: user.isAdmin, // Use the destructured isAdmin
+                    },
+                });
+            },
         })
         
     })
@@ -108,5 +119,6 @@ export const {
     useChangePasswordMutation,
     useUpdateAddressMutation,
     useCheckHistoryQuery,
-    useClearHistoryMutation
+    useClearHistoryMutation,
+    useUpdateUserRoleMutation
 } = userApiSlice;
